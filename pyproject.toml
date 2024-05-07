@@ -21,9 +21,9 @@ dynamic = [
     "version"
 ]
 requires-python = "~=3.8"
-dependencies = [
-    "apache-airflow>=2.4"
-]
+# dependencies = [
+#     "apache-airflow>=2.4"
+# ]
 
 [project.urls]
 # Homepage = ""
