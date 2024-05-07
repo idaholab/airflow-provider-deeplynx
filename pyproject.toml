@@ -1,0 +1,49 @@
+[build-system]
+requires = [
+    "setuptools",
+    "wheel"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "airflow-provider-deeplynx"
+authors = [
+    { name = "Jack Cavaluzzi", email = "jack.cavaluzzi@inl.gov" },
+
+]
+license = { text = "Apache License 2.0" }
+description = "An Apache Airflow provider package built for DeepLynx."
+classifiers = [
+    "Framework :: Apache Airflow",
+    "Framework :: Apache Airflow :: Provider",
+]
+dynamic = [
+    "version"
+]
+requires-python = "~=3.8"
+dependencies = [
+    "apache-airflow>=2.4"
+]
+
+[project.urls]
+# Homepage = ""
+Source = "https://github.inl.gov/Digital-Engineering/airflow-provider-deeplynx/"
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[project.entry-points.apache_airflow_provider]
+provider_info = "deeplynx_provider.__init__:get_provider_info"
+
+[tool.setuptools]
+include-package-data = false
+
+[tool.setuptools.dynamic]
+version = { attr = "deeplynx_provider.__version__" }
+
+[tool.setuptools.packages.find]
+exclude = [
+    "*tests.*",
+    "*tests"
+]
