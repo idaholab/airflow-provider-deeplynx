@@ -4,7 +4,7 @@ __version__ = "1.0.0"
 def get_provider_info():
     return {
         "package-name": "airflow-provider-deeplynx",  # Required
-        "name": "Sample",  # Required
+        "name": "DeepLynx",  # Required
         "description": "Apache Airflow provider for DeepLynx.",  # Required
         "connection-types": [
             {
