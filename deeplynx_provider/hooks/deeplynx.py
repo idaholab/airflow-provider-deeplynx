@@ -1,29 +1,35 @@
-from airflow.providers.sqlite.hooks.sqlite import SqliteHook
 from airflow.hooks.base_hook import BaseHook
+from airflow.exceptions import AirflowException
 import deep_lynx
+from deep_lynx.configuration import Configuration
+
 
 class DeepLynxHook(BaseHook):
-    def __init__(self, conn_id, sqlite_conn_id='workflow_instances_db'):
+    def __init__(self, deep_lynx_config: Configuration, token: str):
         super().__init__()
-        self.conn_id = conn_id
-        self.sqlite_conn_id = sqlite_conn_id
-        self.connection = BaseHook.get_connection(sqlite_conn_id)
+        self.deep_lynx_config = deep_lynx_config
+        self.token = token
 
-    def get_client(self, token=None):
-        """Create a new client and set authorization token if provided."""
-        conn = self.get_connection(self.conn_id)
-        configuration = deep_lynx.Configuration()
-        configuration.host = conn.host
-        api_client = deep_lynx.ApiClient(configuration)
+    def get_deep_lynx(self):
+        """Create a new deep_lynx client and set authorization token"""
+        deep_lynx_client = deep_lynx.ApiClient(self.deep_lynx_config)
+        deep_lynx_client.set_default_header('Authorization', f'Bearer {self.token}')
 
-        if token:
-            api_client.set_default_header('Authorization', f'Bearer {token}')
+        return deep_lynx_client
 
-        return api_client
+    #### get specific deep_lynx.api's
+    def get_data_query_api(self):
+        from deep_lynx.api.data_query_api import DataQueryApi
+        ### create an instance of the API class
+        deep_lynx_client = self.get_deep_lynx()
+        data_query = DataQueryApi(deep_lynx_client)
 
-    def _authenticate(self, api_key, api_secret, x_api_expiry):
-        """Authenticate and return a new token."""
-        client = self.get_client()
-        auth_api = deep_lynx.AuthenticationApi(client)
-        token = auth_api.retrieve_o_auth_token(x_api_key=api_key, x_api_secret=api_secret, x_api_expiry=x_api_expiry)
-        return token
+        return data_query
+
+    def get_time_series_api(self):
+        from deep_lynx.api.time_series_api import TimeSeriesApi
+        ### create an instance of the API class
+        deep_lynx_client = self.get_deep_lynx()
+        time_series = TimeSeriesApi(deep_lynx_client)
+
+        return time_series
