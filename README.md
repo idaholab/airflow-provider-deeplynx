@@ -1,9 +1,7 @@
 # DeepLynx-Airflow-Provider
-
-Airflow documentation on creating a custom provider [here](https://airflow.apache.org/docs/apache-airflow-providers/howto/create-custom-providers.html)
-
-airflow-provider-sample project [here](https://github.com/astronomer/airflow-provider-sample)
-
+- Development setup [here](https://github.inl.gov/Digital-Engineering/airflow-dev)
+- Airflow documentation on creating a custom provider [here](https://airflow.apache.org/docs/apache-airflow-providers/howto/create-custom-providers.html)
+- airflow-provider-sample project [here](https://github.com/astronomer/airflow-provider-sample)
 
 ## Notes on decision to not store token and token expiry
 - (background) Airflow is designed so that all tasks in a given dag should be able to run [independently](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/tasks.html)
