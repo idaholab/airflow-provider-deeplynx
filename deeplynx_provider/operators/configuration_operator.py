@@ -9,6 +9,25 @@ import json
 import os
 
 class DeepLynxConfigurationOperator(BaseOperator):
+    template_fields = (
+        'conn_id',
+        'host',
+        'temp_folder_path',
+        'api_key',
+        'api_key_prefix',
+        'refresh_api_key_hook',
+        'username',
+        'password',
+        'debug',
+        'verify_ssl',
+        'ssl_ca_cert',
+        'cert_file',
+        'key_file',
+        'assert_hostname',
+        'connection_pool_maxsize',
+        'proxy',
+        'safe_chars_for_path_param'
+    )
 
     @apply_defaults
     def __init__(self,
@@ -31,7 +50,7 @@ class DeepLynxConfigurationOperator(BaseOperator):
                  safe_chars_for_path_param='',
                  *args,
                  **kwargs):
-        super(DeepLynxConfigurationOperator, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.conn_id = conn_id
         self.host = host
@@ -52,16 +71,17 @@ class DeepLynxConfigurationOperator(BaseOperator):
         self.safe_chars_for_path_param = safe_chars_for_path_param
         self.config = None
 
+    def execute(self, context):
         # get host from conn_id if provided
-        if conn_id is not None:
+        if self.conn_id is not None:
             conn = BaseHook.get_connection(self.conn_id)
             self.host = conn.host
-        elif host is not None:
-            self.host = host
+        elif self.host is not None:
+            self.host = self.host
         else:
             raise AirflowException("Must supply either conn_id or host, at a minimum.")
 
-    def execute(self, context):
+        # create new config and assign values
         config = Configuration()
         config.host = self.host
         config.temp_folder_path = self.temp_folder_path

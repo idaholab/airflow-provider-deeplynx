@@ -11,7 +11,7 @@ import json
 import os
 
 class DeepLynxBaseOperator(BaseOperator):
-    template_fields = ('token', 'conn_id', 'deeplynx_config', 'minio_uri')
+    template_fields = ('token', 'conn_id', 'host', 'deeplynx_config', 'minio_uri')
 
     @apply_defaults
     def __init__(self, token: str, conn_id:str=None, host:str=None, deeplynx_config:dict=None, minio_uri=None, *args, **kwargs):
