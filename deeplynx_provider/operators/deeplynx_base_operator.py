@@ -52,6 +52,11 @@ class DeepLynxBaseOperator(BaseOperator):
         data_folder = f"{log_folder}/data"
         self.temp_folder = os.getenv('DEEPLYNX_DATA_TEMP_FOLDER', data_folder)
         # self.temp_folder = os.getenv('DEEPLYNX_DATA_TEMP_FOLDER', os.path.join(data_folder, context['dag'].dag_id, context['task'].task_id, context['run_id'])) # TODO: default temp could be more organized
+        #
+        # Check if the folder exists, if not, create it
+        if not os.path.exists(self.temp_folder):
+            os.makedirs(self.temp_folder)
+
 
     # logic for all DeepLynxBaseOperator derived operators to get their deep_lynx sdk config
     def get_deeplynx_config(self):
