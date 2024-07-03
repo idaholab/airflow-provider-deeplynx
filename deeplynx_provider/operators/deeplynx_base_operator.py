@@ -82,21 +82,12 @@ class DeepLynxBaseOperator(BaseOperator):
             config.verify_ssl = False
 
         ## ensure host has https
-        https_host = self.ensure_https(config.host)
-        config.host = https_host
+        config.host = config.host
 
         ## add temp_folder
         config.temp_folder_path = self.temp_folder
 
         return config
-
-    def ensure_https(self, url):
-        if not url.startswith("https://"):
-            if url.startswith("http://"):
-                url = url.replace("http://", "https://", 1)
-            else:
-                url = "https://" + url
-        return url
 
     # many deeplynx operators retrieve json data that should either be writen to storage or the data should be passed to xcom directly
     def write_or_push_to_xcom(self, context, data, file_name):
