@@ -26,23 +26,24 @@ class DeepLynxHook(BaseHook):
     ###########################################
     ##### get deeplynx apis
     def get_data_query_api(self):
-        from deep_lynx.api.data_query_api import DataQueryApi
         deep_lynx_client = self.get_deep_lynx_client()
-        return DataQueryApi(deep_lynx_client)
+        return deep_lynx.DataQueryApi(deep_lynx_client)
 
     def get_time_series_api(self):
-        # from deep_lynx.api.time_series_api import TimeSeriesApi
         deep_lynx_client = self.get_deep_lynx_client()
         return deep_lynx.TimeSeriesApi(deep_lynx_client)
 
     def get_data_sources_api(self):
-        from deep_lynx.api.data_sources_api import DataSourcesApi
         deep_lynx_client = self.get_deep_lynx_client()
-        return DataSourcesApi(deep_lynx_client)
+        return deep_lynx.DataSourcesApi(deep_lynx_client)
 
     def get_authentication_api(self):
         deep_lynx_client = self.get_deep_lynx_client()
         return deep_lynx.AuthenticationApi(deep_lynx_client)
+
+    def get_containers_api(self):
+        deep_lynx_client = self.get_deep_lynx_client()
+        return deep_lynx.ContainersApi(deep_lynx_client)
 
     ###########################################
     ##### deeplynx connection widget and field
