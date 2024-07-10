@@ -1,8 +1,6 @@
 from airflow.utils.decorators import apply_defaults
 from deeplynx_provider.operators.deeplynx_base_operator import DeepLynxBaseOperator
 from deep_lynx.configuration import Configuration
-#
-from deeplynx_provider.operators.query_helpers import GraphQLIntrospectionQuery, IntrospectionQueryResponseToFieldsList, MetatypeQuery
 
 
 class DownloadFileOperator(DeepLynxBaseOperator):
@@ -10,8 +8,8 @@ class DownloadFileOperator(DeepLynxBaseOperator):
     template_fields = DeepLynxBaseOperator.template_fields + ('container_id', 'file_id')
 
     @apply_defaults
-    def __init__(self, container_id: str, file_id: str, conn_id: str = None, deeplynx_config: dict = None, token: str = None, minio_uri: str = None, *args, **kwargs):
-        super().__init__(conn_id=conn_id, deeplynx_config=deeplynx_config, token=token, minio_uri=minio_uri, *args, **kwargs)
+    def __init__(self, container_id: str, file_id: str, conn_id: str = None, host:str=None, deeplynx_config: dict = None, token: str = None, minio_uri: str = None, *args, **kwargs):
+        super().__init__(conn_id=conn_id, host=host, deeplynx_config=deeplynx_config, token=token, *args, **kwargs)
         self.container_id = container_id
         self.file_id = file_id
 

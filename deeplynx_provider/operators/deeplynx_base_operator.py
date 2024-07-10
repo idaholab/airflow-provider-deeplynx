@@ -11,28 +11,20 @@ import json
 import os
 
 class DeepLynxBaseOperator(BaseOperator):
-    template_fields = ('token', 'conn_id', 'host', 'deeplynx_config', 'minio_uri')
+    template_fields = ('token', 'conn_id', 'host', 'deeplynx_config')
 
     @apply_defaults
-    def __init__(self, token: str, conn_id:str=None, host:str=None, deeplynx_config:dict=None, minio_uri=None, *args, **kwargs):
+    def __init__(self, token:str=None, conn_id:str=None, host:str=None, deeplynx_config:dict=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        ## param checks
-        # only one of conn_id, or host, or deeplynx_config
-        if sum([conn_id is not None, host is not None, deeplynx_config is not None]) >= 2:
-            raise AirflowException("Please provide only one of conn_id, host, or deeplynx_config.")
-        elif conn_id is None and host is None and deeplynx_config is None:
-            raise AirflowException("Please provide either a conn_id, a host, or deeplynx_config.")
-
-        #
         self.token = token
         self.conn_id = conn_id
         self.host = host
         self.deeplynx_config = deeplynx_config
-        self.minio_uri = minio_uri
         self.ssl_ca_cert = os.getenv('SSL_CERT_FILE', None)
         ## set temp folder; use env var or default
         self.set_temp_folder()
+        #
+        self.validate_params()
 
     def execute(self, context):
         ## deep_lynx.configuration
@@ -47,17 +39,19 @@ class DeepLynxBaseOperator(BaseOperator):
     def do_custom_logic(self, context, deeplynx_hook):
         raise NotImplementedError("Subclasses must implement this method.")
 
-    def set_temp_folder(self):
-        log_folder = conf.get('logging', 'base_log_folder')
-        data_folder = f"{log_folder}/data"
-        self.temp_folder = os.getenv('DEEPLYNX_DATA_TEMP_FOLDER', data_folder)
-        # self.temp_folder = os.getenv('DEEPLYNX_DATA_TEMP_FOLDER', os.path.join(data_folder, context['dag'].dag_id, context['task'].task_id, context['run_id'])) # TODO: default temp could be more organized
-        #
-        # Check if the folder exists, if not, create it
-        if not os.path.exists(self.temp_folder):
-            os.makedirs(self.temp_folder)
+    def validate_params(self):
+        ## param checks
+        # only one of conn_id, or host, or deeplynx_config
+        if sum([self.conn_id is not None, self.host is not None, self.deeplynx_config is not None]) >= 2:
+            raise AirflowException("Please provide only one of conn_id, host, or deeplynx_config.")
+        # at least one of conn_id, or host, or deeplynx_config
+        elif self.conn_id is None and self.host is None and self.deeplynx_config is None:
+            raise AirflowException("Please provide either a conn_id, a host, or deeplynx_config.")
+        elif self.token is None:
+            raise AirflowException("Please provide a token.")
 
-
+    #############################################################################
+    ##### deeplynx config
     # logic for all DeepLynxBaseOperator derived operators to get their deep_lynx sdk config
     def get_deeplynx_config(self):
         # TODO: could add more deeplynx config with conn_id
@@ -89,13 +83,23 @@ class DeepLynxBaseOperator(BaseOperator):
 
         return config
 
+    #############################################################################
+    ##### data storage
+    def set_temp_folder(self):
+        log_folder = conf.get('logging', 'base_log_folder')
+        data_folder = f"{log_folder}/data"
+        self.temp_folder = os.getenv('DEEPLYNX_DATA_TEMP_FOLDER', data_folder)
+        # Check if the folder exists, if not, create it
+        if not os.path.exists(self.temp_folder):
+            os.makedirs(self.temp_folder)
+
     # many deeplynx operators retrieve json data that should either be writen to storage or the data should be passed to xcom directly
     def write_or_push_to_xcom(self, context, data, file_name):
         import os
         import json
 
         task_instance = context['task_instance']
-        if self.minio_uri is not None or self.write_to_file is not None:
+        if self.write_to_file is not None:
             file_path = self.save_data(data, file_name)
             # Push file_path to XCom
             task_instance.xcom_push(key='file_path', value=file_path)
@@ -103,50 +107,28 @@ class DeepLynxBaseOperator(BaseOperator):
             # Push data to XCom
             task_instance.xcom_push(key='data', value=data)
 
-    #############################################################################
     def save_data(self, data, file_name):
-        if self.minio_uri:
-            # Store data in MinIO
-            return self.write_data_and_send_to_minio(file_name, data)
-        elif self.temp_folder:
+        if self.temp_folder:
             # Store data locally
             return self.write_data_to_local(file_name, data)
         else:
-            raise ValueError("Either temp_folder or minio_uri must be provided")
+            raise ValueError("temp_folder must be provided")
 
     def write_data_to_local(self, file_name, data):
         file_path = os.path.join(self.temp_folder, file_name)
         self.write_data(file_path, data)
         return file_path
 
-    def write_data_and_send_to_minio(self, file_name, data):
-        local_path = self.write_data_to_local(file_name, data)
-        self.send_data_to_minio(file_name, local_path)
-        return local_path
-
-    def send_data_to_minio(self, file_name, local_path):
-        s3_hook = S3Hook(aws_conn_id='minio_default')
-        bucket_name, key = self.parse_minio_uri(self.minio_uri, file_name)
-        s3_hook.load_file(filename=local_path, key=key, bucket_name=bucket_name)
-
     def write_data(self, file_path, data):
         # Write data to the specified file path
         with open(file_path, 'w') as f:
             f.write(data)
 
-    @staticmethod
-    def parse_minio_uri(minio_uri, file_name):
-        # Assuming minio_uri is in the format "s3://bucket_name/path"
-        uri_parts = minio_uri.replace("s3://", "").split('/', 1)
-        bucket_name = uri_parts[0]
-        key = f"{uri_parts[1]}/{file_name}" if len(uri_parts) > 1 else file_name
-        return bucket_name, key
-
     def format_query_response_filename(self, context, query_name):
         run_id = context['run_id']
         task_id = context['task'].task_id
-        print("task_id")
-        print(task_id)
         query_response_filename = query_name + '_' + run_id + '_' + task_id + '.json'
 
         return query_response_filename
+
+    #############################################################################

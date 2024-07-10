@@ -1,6 +1,6 @@
 from airflow.utils.decorators import apply_defaults
 from deeplynx_provider.operators.deeplynx_base_operator import DeepLynxBaseOperator
-from deeplynx_provider.operators.query_helpers import GraphQLIntrospectionQuery, IntrospectionQueryResponseToFieldsList, MetatypeQuery
+from deeplynx_provider.operators.query_helpers import GraphQLIntrospectionQuery, IntrospectionQueryResponseToFieldsList, validate_introspection_response, MetatypeQuery
 import deep_lynx
 from deep_lynx.api.data_query_api import DataQueryApi
 import json
@@ -23,7 +23,7 @@ class MetatypeQueryOperator(DeepLynxBaseOperator):
         ### first, instrospection query
         introspection_query = GraphQLIntrospectionQuery(self.metatype_name).generate_query()
         introspection_response = data_query_api.data_query({"query": introspection_query}, self.container_id)
-        fields_list = IntrospectionQueryResponseToFieldsList(introspection_response)
+        fields_list = IntrospectionQueryResponseToFieldsList(introspection_response, self.metatype_name)
 
         ### now query using fields_list from introspection_query
         query_obj = MetatypeQuery(self.metatype_name, fields_list)

@@ -34,3 +34,20 @@ def reconstruct_config_str(config_str):
     config = reconstruct_config(config_dict)
 
     return config
+
+def print_connection_fields(self, conn_id):
+    conn = BaseHook.get_connection(conn_id)
+    fields = ['conn_id', 'conn_type', 'host', 'schema', 'login', 'password', 'port', 'extra']
+    for field in fields:
+        value = getattr(conn, field, None)
+        if value:
+            print(f"{field}: {value}")
+    # Print additional fields from conn.extra if it's a JSON string
+    if conn.extra:
+        try:
+            import json
+            extra_fields = json.loads(conn.extra)
+            for key, value in extra_fields.items():
+                print(f"{key}: {value}")
+        except json.JSONDecodeError:
+            print(f"extra: {conn.extra}")

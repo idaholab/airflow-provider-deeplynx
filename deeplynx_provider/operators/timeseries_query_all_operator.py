@@ -23,7 +23,7 @@ class TimeSeriesQueryAllOperator(DeepLynxBaseOperator):
         ### first, instrospection query
         introspection_query = GraphQLIntrospectionQuery("Timeseries").generate_query()
         introspection_response = timeseries_api.timeseries_data_source_query({"query": introspection_query}, self.container_id, self.datasource_id)
-        fields_list = IntrospectionQueryResponseToFieldsList(introspection_response)
+        fields_list = IntrospectionQueryResponseToFieldsList(introspection_response, "Timeseries")
 
         ### now query using fields_list from introspection_query
         query_obj = TimeSeriesQuery(fields_list)

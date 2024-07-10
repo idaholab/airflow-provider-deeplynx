@@ -17,9 +17,10 @@ class GraphQLIntrospectionQuery:
 }}
 """
 
-def IntrospectionQueryResponseToFieldsList(introspection_response):
+def IntrospectionQueryResponseToFieldsList(introspection_response, type_name):
     fields_list = []
     response_data = introspection_response.to_dict()
+    validate_introspection_response(response_data, type_name)
     fields_array = response_data['data']['__type']['fields']
     for fields_obj in fields_array:
         kind = fields_obj['type']['kind']
@@ -29,6 +30,15 @@ def IntrospectionQueryResponseToFieldsList(introspection_response):
             fields_list.append(name)
 
     return fields_list
+
+def validate_introspection_response(response_data, type_name):
+    from airflow.exceptions import AirflowException
+
+    try:
+        if response_data.get('data', {}).get('__type') is None:
+            raise AirflowException(f"The Type named {type_name} is not present in the given DeepLynx container")
+    except (ValueError, TypeError) as e:
+        raise AirflowException(f"Invalid response data: {e}")
 
 class TimeSeriesQuery:
     def __init__(self, properties, limit=1000, sort_by="timestamp", sort_desc=False):

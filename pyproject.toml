@@ -27,7 +27,6 @@ dependencies = [
 ]
 
 [project.urls]
-# Homepage = ""
 Source = "https://github.inl.gov/Digital-Engineering/airflow-provider-deeplynx/"
 
 [project.readme]
