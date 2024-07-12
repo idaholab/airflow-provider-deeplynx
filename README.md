@@ -2,7 +2,7 @@
 
 ## Installation
 ### Install from PyPI
-To install the provider package from PyPI, simply run:
+(coming soon) To install the provider package from PyPI, simply run:
 
 ```sh
 pip install airflow-provider-deeplynx
@@ -15,7 +15,11 @@ pip install airflow-provider-deeplynx
 
 ## Usage
 Most communication with DeepLynx requires a bearer token, so the first task of a DeepLynx dag is usually to generate a token, which can be done with `GetOauthTokenOperator`. Once a token is generated using this operator, it can be passed to downstream tasks using [XComs](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/xcoms.html#xcoms), the token generation `task_id`, and the key `token`. `GetOauthTokenOperator` requires either a `conn_id` of an Airflow [Connection](https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/connections.html#connections-hooks) of type DeepLynx, or the parameters `host`, `api_key`, and `api_secret`. It is recommended to create a new Airflow connection of type DeepLynx through the [Airflow UI](https://airflow.apache.org/docs/apache-airflow/stable/howto/connection.html#creating-a-connection-with-the-ui), and input values for `DeepLynx URL`, `API Key`, and `API Secret`. You can then use this DeepLynx connection's id to set the
-`conn_id` for any airflow operators in this package (alternatively, you can supply the `host` parameter). Most functionality can be understood by looking at the provided [Example Dags](deeplynx_provider\example_dags). Class level documentation is also provided.
+`conn_id` for any airflow operators in this package (alternatively, you can supply the `host` parameter).
+Navigate to the Connections page with Admin -> Connections.
+![image](https://media.github.inl.gov/user/13/files/bc751733-676c-48ac-9573-b06b7d1b7750)
+
+Most functionality can be understood by looking at the provided [Example Dags](deeplynx_provider\example_dags). Class level documentation is also provided.
 
 ### Example Dags
 Example dags are provided in [`deeplynx_provider\example_dags`](deeplynx_provider\example_dags). Copy the full directory into your airflow [`DAG_FOLDER`](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html#loading-dags) to have them loaded into your airflow environment.
