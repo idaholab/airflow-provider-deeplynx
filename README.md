@@ -6,6 +6,16 @@
 ## Installation
 
 ## Testing
+### Functional Test
+A single, self-contained DAG functional test. Its mainly meant for new users to test their installation and to quickly see how to use the package.
+
+- create container
+- import container
+- set data source active
+- import data
+- query data
+- upload file
+- download file
 
 ## Usage
 
