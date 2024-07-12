@@ -9,7 +9,6 @@ build-backend = "setuptools.build_meta"
 name = "airflow-provider-deeplynx"
 authors = [
     { name = "Jack Cavaluzzi", email = "jack.cavaluzzi@inl.gov" },
-
 ]
 license = { text = "Apache License 2.0" }
 description = "An Apache Airflow provider package built for DeepLynx."
@@ -35,9 +34,6 @@ content-type = "text/markdown"
 
 [project.entry-points.apache_airflow_provider]
 provider_info = "deeplynx_provider.__init__:get_provider_info"
-
-[project.entry-points."airflow.plugins"]
-example_dags_plugin = "deeplynx_provider.plugins:ExampleDagsPlugin"
 
 [tool.setuptools]
 include-package-data = true

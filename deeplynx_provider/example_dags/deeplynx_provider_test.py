@@ -33,7 +33,7 @@ dag_params = {
 }
 
 dag = DAG(
-    'functional_test',
+    'deeplynx_provider_test',
     default_args=default_args,
     description='self contained functional test',
     schedule_interval=None,
