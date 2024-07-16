@@ -9,7 +9,7 @@ import os
 # get local data paths
 dag_directory = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(dag_directory, 'data')
-import_data_name = "piping_tutorial.mp4"
+import_data_name = "lynx_blue.png"
 import_data_path = os.path.join(data_dir, import_data_name)
 
 
@@ -53,7 +53,7 @@ get_token = GetOauthTokenOperator(
 
 upload_file = UploadFileOperator(
     task_id='upload_file',
-    conn_id='{{ params.connection_id }}',
+    deeplynx_config="{{ ti.xcom_pull(task_ids='create_config', key='deeplynx_config') }}",
     token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
     container_id='{{ params.container_id }}',
     data_source_id = '{{ params.data_source_id }}',
@@ -63,7 +63,7 @@ upload_file = UploadFileOperator(
 
 download_file = DownloadFileOperator(
     task_id='download_file',
-    conn_id='{{ params.connection_id }}',
+    deeplynx_config="{{ ti.xcom_pull(task_ids='create_config', key='deeplynx_config') }}",
     token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
     container_id='{{ params.container_id }}',
     file_id="{{ ti.xcom_pull(task_ids='upload_file', key='file_id') }}",

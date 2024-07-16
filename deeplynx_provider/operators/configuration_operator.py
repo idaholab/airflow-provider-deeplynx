@@ -179,7 +179,7 @@ class DeepLynxConfigurationOperator(BaseOperator):
         config_dict.pop('logger_formatter', None)
         config_dict.pop('logger_stream_handler', None)
 
-        self.log.info(f'Configuration details: {config_dict}')
+        # self.log.info(f'Configuration details: {config_dict}')
 
         # Convert the dictionary to a JSON string and push it to XCom
         config_json = json.dumps(config_dict)

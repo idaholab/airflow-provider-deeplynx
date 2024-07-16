@@ -33,7 +33,7 @@ Example DAGs are provided in [`deeplynx_provider/example_dags`](deeplynx_provide
 A single, self-contained DAG functional test. Its meant for new users to test their installation and quickly see how to use the package. The user should create an Airflow Connection of type DeepLynx and input values for `DeepLynx URL`, `API Key`, and `API Secret`. To run the DAG, users should supply their DeepLynx `connection_id`, they may create a new `container_name`, and they should leave the provided value for the `data_source_name` as-is (`TC-201`).
 This DAG will:
 - check if the supplied `container_name` exists and retrieve the `container_id` if so; if that container name does not exist, it will create a new container with the supplied name.
-- import container ontology and typemappings from [TEDS_export.json](deeplynx_provider/example_dags/data/TEDS_export.json)
+- import container ontology and typemappings from [Container_Export.json](deeplynx_provider/example_dags/data/Container_Export.json)
 - set the data source active (named `TC-201`)
 - import timeseries data
 - query timeseries data using two different methods
@@ -64,7 +64,7 @@ This package is setup to use [token](https://github.com/idaholab/Deep-Lynx/wiki/
 - If using this Airflow package in a Docker environment to talk to a Dockerized DeepLynx, you should likely set your Deeplynx host/url to `http://host.docker.internal:8090`.
 
 ### Other Documentation
-- Development setup [here](https://github.inl.gov/Digital-Engineering/airflow-dev)
+- Dockerized Airflow Development setup [here](https://github.inl.gov/Digital-Engineering/airflow-dev)
 - Airflow documentation on creating a custom provider [here](https://airflow.apache.org/docs/apache-airflow-providers/howto/create-custom-providers.html)
 - airflow-provider-sample project [here](https://github.com/astronomer/airflow-provider-sample)
 
