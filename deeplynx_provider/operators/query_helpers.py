@@ -1,3 +1,12 @@
+from enum import Enum
+
+class QueryType(Enum):
+    GRAPH = "graph"
+    METATYPE = "metatype"
+    RELATIONSHIP = "relationship"
+    TIMESERIES = "timeseries"
+
+
 class GraphQLIntrospectionQuery:
     def __init__(self, type_name):
         self.type_name = type_name
@@ -112,6 +121,31 @@ class RelationshipQuery:
                     }},
                     metadata_properties
                 }}
+            }}
+        }}
+        """
+        return query_template
+
+class GraphQuery:
+    def __init__(self, root_node, depth):
+        self.root_node = root_node
+        self.depth = depth
+
+    def generate_query(self):
+        query_template = f"""
+        {{
+            graph(
+                root_node: "{self.root_node}"
+                depth: "{self.depth}"
+            ){{
+                origin_id
+                origin_properties
+                origin_metatype_name
+                destination_id
+                destination_properties
+                destination_metatype_name
+                depth
+                edge_direction
             }}
         }}
         """

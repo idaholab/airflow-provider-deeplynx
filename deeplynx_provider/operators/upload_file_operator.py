@@ -19,4 +19,10 @@ class UploadFileOperator(DeepLynxBaseOperator):
         data_sources_api = deeplynx_hook.get_data_sources_api()
         ### upload_file
         response = data_sources_api.upload_file(self.container_id, self.data_source_id, file = self.file_path)
-        print(response)
+        ### Check if the response indicates success; push file_id to xcom if success
+        if response.get('isError') != False:
+            raise AirflowException(f"Failed to create manual import: {response}")
+        elif response.get('isError') == False:
+            file_id = response.get('value')[0].get('value').get('id')
+            task_instance = context['task_instance']
+            task_instance.xcom_push(key='file_id', value=file_id)

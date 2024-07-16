@@ -9,6 +9,34 @@ import json
 import os
 
 class DeepLynxConfigurationOperator(BaseOperator):
+    """
+    DeepLynxConfigurationOperator is an Airflow operator to create and configure
+    a DeepLynx configuration object.
+
+    This operator requires either a connection ID or a host, and can be customized
+    with various optional parameters for API key management, SSL verification,
+    and proxy settings.
+
+    Attributes:
+        conn_id (str, optional): The connection ID to use for the operation.
+        host (str, optional): The host for the DeepLynx API.
+        temp_folder_path (str, optional): The temporary folder path for file storage.
+        api_key (dict, optional): The API key for authentication.
+        api_key_prefix (dict, optional): The API key prefix.
+        refresh_api_key_hook (str, optional): The hook to refresh the API key.
+        username (str, optional): The username for authentication.
+        password (str, optional): The password for authentication.
+        debug (bool, optional): The debug mode flag.
+        verify_ssl (bool, optional): The flag to verify SSL certificates.
+        ssl_ca_cert (str, optional): The path to the SSL CA certificate.
+        cert_file (str, optional): The path to the client certificate file.
+        key_file (str, optional): The path to the client key file.
+        assert_hostname (str, optional): The hostname to verify.
+        connection_pool_maxsize (int, optional): The maximum size of the connection pool.
+        proxy (str, optional): The proxy settings.
+        safe_chars_for_path_param (str, optional): Safe characters for path parameters.
+    """
+
     template_fields = (
         'conn_id',
         'host',
@@ -50,6 +78,30 @@ class DeepLynxConfigurationOperator(BaseOperator):
                  safe_chars_for_path_param='',
                  *args,
                  **kwargs):
+        """
+        Initialize DeepLynxConfigurationOperator with the given parameters.
+
+        Args:
+            conn_id (str, optional): The connection ID to use for the operation.
+            host (str, optional): The host for the DeepLynx API.
+            temp_folder_path (str, optional): The temporary folder path for file storage.
+            api_key (dict, optional): The API key for authentication.
+            api_key_prefix (dict, optional): The API key prefix.
+            refresh_api_key_hook (str, optional): The hook to refresh the API key.
+            username (str, optional): The username for authentication.
+            password (str, optional): The password for authentication.
+            debug (bool, optional): The debug mode flag.
+            verify_ssl (bool, optional): The flag to verify SSL certificates.
+            ssl_ca_cert (str, optional): The path to the SSL CA certificate.
+            cert_file (str, optional): The path to the client certificate file.
+            key_file (str, optional): The path to the client key file.
+            assert_hostname (str, optional): The hostname to verify.
+            connection_pool_maxsize (int, optional): The maximum size of the connection pool.
+            proxy (str, optional): The proxy settings.
+            safe_chars_for_path_param (str, optional): Safe characters for path parameters.
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+        """
         super().__init__(*args, **kwargs)
 
         self.conn_id = conn_id
@@ -61,8 +113,8 @@ class DeepLynxConfigurationOperator(BaseOperator):
         self.username = username
         self.password = password
         self.debug = debug
-        self.ssl_ca_cert = ssl_ca_cert or os.getenv('SSL_CERT_FILE', None)
-        self.verify_ssl = verify_ssl if self.ssl_ca_cert else False
+        self.ssl_ca_cert = ssl_ca_cert
+        self.verify_ssl = verify_ssl
         self.cert_file = cert_file
         self.key_file = key_file
         self.assert_hostname = assert_hostname
@@ -72,6 +124,18 @@ class DeepLynxConfigurationOperator(BaseOperator):
         self.config = None
 
     def execute(self, context):
+        """
+        Execute the configuration creation for DeepLynx.
+
+        This method sets up the DeepLynx configuration based on the provided
+        parameters, validates the input, and logs the configuration details.
+
+        Args:
+            context (dict): The context dictionary provided by Airflow.
+
+        Returns:
+            None
+        """
         # get host from conn_id if provided
         if self.conn_id is not None:
             conn = BaseHook.get_connection(self.conn_id)

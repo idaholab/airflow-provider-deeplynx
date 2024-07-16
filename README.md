@@ -1,5 +1,5 @@
 # DeepLynx-Airflow-Provider
-
+TODO: intro
 ## Installation
 ### Install from PyPI
 (coming soon) To install the provider package from PyPI, simply run:
@@ -13,8 +13,13 @@ pip install airflow-provider-deeplynx
 - Install the package using pip: `pip install .`
   - for development, you can install in editable mode with `pip install -e .`
 
+### Environment Variables
+This package uses some environment variables for configuration:
+- `SSL_CERT_FILE`: This should be the Airflow accessible path to the file containing the INL SSL certificate authority. This may be needed depending on your DeepLynx instance's setup [DeepLynx Authentication Methods](https://github.com/idaholab/Deep-Lynx/wiki/Authentication-Methods).
+- `DEEPLYNX_DATA_TEMP_FOLDER`: This is the Airflow environment path for where data is downloaded. If no value is set, this defaults to `AIRFLOW_HOME/logs/data`.
+
 ## Usage
-Most communication with DeepLynx requires a bearer token, so the first task of a DeepLynx dag is usually to generate a token, which can be done with `GetOauthTokenOperator`. Once a token is generated using this operator, it can be passed to downstream tasks using [XComs](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/xcoms.html#xcoms), the token generation `task_id`, and the key `token`. `GetOauthTokenOperator` requires either a `conn_id` of an Airflow [Connection](https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/connections.html#connections-hooks) of type DeepLynx, or the parameters `host`, `api_key`, and `api_secret`. It is recommended to create a new Airflow connection of type DeepLynx through the [Airflow UI](https://airflow.apache.org/docs/apache-airflow/stable/howto/connection.html#creating-a-connection-with-the-ui), and input values for `DeepLynx URL`, `API Key`, and `API Secret`. You can then use this DeepLynx connection's id to set the
+Typical communication with DeepLynx requires a bearer token, so the first task of a DeepLynx dag is usually to generate a token, which can be done with `GetOauthTokenOperator`. Once a token is generated using this operator, it can be passed to downstream tasks using [XComs](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/xcoms.html#xcoms), the token generation `task_id`, and the key `token`. `GetOauthTokenOperator` requires either a `conn_id` of an Airflow [Connection](https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/connections.html#connections-hooks) of type DeepLynx, or the parameters `host`, `api_key`, and `api_secret`. It is recommended to create a new Airflow connection of type DeepLynx through the [Airflow UI](https://airflow.apache.org/docs/apache-airflow/stable/howto/connection.html#creating-a-connection-with-the-ui), and input values for `DeepLynx URL`, `API Key`, and `API Secret`. You can then use this DeepLynx connection's id to set the
 `conn_id` for any airflow operators in this package (alternatively, you can supply the `host` parameter).
 Navigate to the Connections page with Admin -> Connections.
 ![image](https://media.github.inl.gov/user/13/files/bc751733-676c-48ac-9573-b06b7d1b7750)
@@ -24,7 +29,7 @@ Most functionality can be understood by looking at the provided [Example Dags](d
 ### Example Dags
 Example dags are provided in [`deeplynx_provider\example_dags`](deeplynx_provider\example_dags). Copy the full directory into your airflow [`DAG_FOLDER`](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html#loading-dags) to have them loaded into your airflow environment.
 
-#### Functional Test
+#### Functional Tests
 A single, self-contained DAG functional test. Its mainly meant for new users to test their installation and to quickly see how to use the package.
 
 - create container
@@ -35,7 +40,7 @@ A single, self-contained DAG functional test. Its mainly meant for new users to 
 - upload result
 - download file
 
-### DeepLynx Operator Required Inputs
+### Operator Required Inputs
 <!-- TODO: want to use a documentation system to generate basic docs for my hook and operators, and then point to that documentation from this section -->
 
 ### DeepLynx Config
@@ -43,10 +48,11 @@ Communication with DeepLynx using this package can be configured with various op
 
 The operators in this provider package use the [Deep Lynx Python SDK](https://github.com/idaholab/Deep-Lynx-Python-Package) to communicate with DeepLynx. The [DeepLynxConfigurationOperator](deeplynx_provider\operators\configuration_operator.py) can be used to set your (Configuration)[https://github.com/idaholab/Deep-Lynx-Python-Package/blob/main/deep_lynx/configuration.py] exactly how you want it, and this configuration is then passed to a task instance (XCom)[https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/xcoms.html] so that downstream tasks derived from [DeepLynxBaseOperator](deeplynx_provider\operators\deeplynx_base_operator.py) can use this configuration.
 
-<!-- TODO: need to explain ssl_ca_cert and set_temp_folder and other things that can be set with env vars -->
-Default DeepLynx Configuration:
-  -
+#### Default DeepLynx Configuration:
+If no `deeplynx_config` is provided to the `DeepLynxBaseOperator`-derived Operator, and if [Environment Variables](#environment-variables) are not set
 
+#### DeepLynx Authentication
+This package is setup to use [token](https://github.com/idaholab/Deep-Lynx/wiki/Authentication-Methods#token-token) authentication with DeepLynx, but other authentication methods are supported by setting the [DeepLynx Config](#deepLynx-config).
 
 ## Notes
 ### Other Documentation
