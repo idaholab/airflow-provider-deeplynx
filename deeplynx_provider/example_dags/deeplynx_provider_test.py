@@ -37,7 +37,12 @@ dag_params = {
 dag = DAG(
     'deeplynx_provider_test',
     default_args=default_args,
-    description='self contained functional test',
+    description=(
+        'A functional test DAG for the `airflow-provider-deeplynx` package. '
+        'Users should create a DeepLynx connection in Airflow with `URL`, `API Key`, '
+        'and `API Secret`. To run the DAG, supply the DeepLynx `connection_id`, '
+        'optionally create a new `container_name`, and keep `data_source_name` as `TC-201`.'
+    ),
     schedule=None,
     catchup=False,
     params=dag_params,

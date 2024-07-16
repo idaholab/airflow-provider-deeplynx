@@ -30,7 +30,8 @@ Most functionality can be understood by looking at the provided [Example Dags](d
 Example DAGs are provided in [`deeplynx_provider/example_dags`](deeplynx_provider/example_dags). Copy the full directory into your airflow [`DAG_FOLDER`](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html#loading-dags) to have them loaded into your airflow environment.
 
 #### [deeplynx_provider_test](deeplynx_provider/example_dags/deeplynx_provider_test.py)
-A single, self-contained DAG functional test. Its meant for new users to test their installation and quickly see how to use the package. The user should create an Airflow Connection of type DeepLynx and input values for `DeepLynx URL`, `API Key`, and `API Secret`. To run the DAG, users should supply their DeepLynx `connection_id`, they may create a new `container_name`, and they should leave the provided value for the `data_source_name` as-is (`TC-201`).
+A functional test DAG for the `airflow-provider-deeplynx` package. Users should create a DeepLynx connection in Airflow with `URL`, `API Key`,
+and `API Secret`. To run the DAG, supply the DeepLynx `connection_id`, optionally create a new `container_name`, and keep `data_source_name` as `TC-201`.
 This DAG will:
 - check if the supplied `container_name` exists and retrieve the `container_id` if so; if that container name does not exist, it will create a new container with the supplied name.
 - import container ontology and typemappings from [Container_Export.json](deeplynx_provider/example_dags/data/Container_Export.json)

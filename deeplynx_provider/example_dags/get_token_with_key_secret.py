@@ -22,7 +22,7 @@ dag_params = {
 dag = DAG(
     'get_token_with_key_secret',
     default_args=default_args,
-    description='get_token_with_key_secret',
+    description='Demonstrates obtaining a DeepLynx token using `GetOauthTokenOperator` by directly specifying `host`, `api_key`, and `api_secret`, without using `conn_id`.'
     schedule=None,
     catchup=False,
     params=dag_params,
