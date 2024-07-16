@@ -20,8 +20,8 @@ dag_params = {
 dag = DAG(
     'get_token_with_key_secret',
     default_args=default_args,
-    description='',
-    schedule_interval=None,
+    description='get_token_with_key_secret',
+    schedule=None,
     catchup=False,
     params=dag_params,
     max_active_runs=1

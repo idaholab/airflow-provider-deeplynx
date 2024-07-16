@@ -25,13 +25,14 @@ dag_params = {
   "connection_id": "",
   "container_id": "",
   "data_source_id": "",
+  "download_file_directory": "/usr/local/airflow/logs/custom_download_directory",
 }
 
 dag = DAG(
-    'deeplynx_configuration_example',
+    'deeplynx_config_upload_download',
     default_args=default_args,
     description='',
-    schedule_interval=None,
+    schedule=None,
     catchup=False,
     params=dag_params,
     max_active_runs=1
@@ -40,7 +41,7 @@ dag = DAG(
 create_config = DeepLynxConfigurationOperator(
     task_id='create_config',
     conn_id='{{ params.connection_id }}',
-    verify_ssl=False,
+    temp_folder_path='{{ params.download_file_directory }}',
     dag=dag
 )
 
@@ -54,7 +55,7 @@ upload_file = UploadFileOperator(
     task_id='upload_file',
     conn_id='{{ params.connection_id }}',
     token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
-    container_id="{{ ti.xcom_pull(task_ids='create_container', key='container_id') }}",
+    container_id='{{ params.container_id }}',
     data_source_id = '{{ params.data_source_id }}',
     file_path = import_data_path,
     dag=dag

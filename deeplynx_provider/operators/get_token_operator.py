@@ -1,5 +1,5 @@
 from airflow.models import BaseOperator
-from airflow.hooks.base_hook import BaseHook
+from airflow.hooks.base import BaseHook
 from deeplynx_provider.hooks.deeplynx import DeepLynxHook
 from airflow.utils.decorators import apply_defaults
 from airflow.exceptions import AirflowException

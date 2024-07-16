@@ -6,6 +6,7 @@ from deeplynx_provider.operators.import_container_operator import ImportContaine
 from deeplynx_provider.operators.set_data_source_active_operator import SetDataSourceActiveOperator
 from deeplynx_provider.operators.create_manual_import_from_path_operator import CreateManualImportFromPathOperator
 from deeplynx_provider.operators.timeseries_query_operator import TimeSeriesQueryOperator
+from deeplynx_provider.operators.timeseries_query_all_operator import TimeSeriesQueryAllOperator
 from deeplynx_provider.operators.upload_file_operator import UploadFileOperator
 import os
 
@@ -26,9 +27,8 @@ default_args = {
 }
 
 dag_params = {
-  "connection_id": "deeplynx_local",
+  "connection_id": "",
   "container_name": "My DeepLynx Airflow Provider Test",
-  # "container_name": "My DeepLynx Airflow Provider Test",
   "data_source_name": "TC-201",
 }
 
@@ -36,7 +36,7 @@ dag = DAG(
     'deeplynx_provider_test',
     default_args=default_args,
     description='self contained functional test',
-    schedule_interval=None,
+    schedule=None,
     catchup=False,
     params=dag_params,
     max_active_runs=1
@@ -104,6 +104,15 @@ query_timeseries = TimeSeriesQueryOperator(
     dag=dag
 )
 
+query_timeseries_all = TimeSeriesQueryAllOperator(
+    task_id='timeseries_query_all',
+    conn_id='{{ params.connection_id }}',
+    token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
+    container_id="{{ ti.xcom_pull(task_ids='create_container', key='container_id') }}",
+    data_source_id="{{ ti.xcom_pull(task_ids='set_data_source_active', key='data_id') }}",
+    dag=dag
+)
+
 upload_result = UploadFileOperator(
     task_id='upload_result',
     conn_id='{{ params.connection_id }}',
@@ -115,4 +124,4 @@ upload_result = UploadFileOperator(
 )
 
 
-get_token >> create_container >> import_container >> set_data_source_active >> import_timeseries_data >> query_timeseries >> upload_result
+get_token >> create_container >> import_container >> set_data_source_active >> import_timeseries_data >> [query_timeseries, query_timeseries_all] >> upload_result
