@@ -1,3 +1,5 @@
+# Copyright 2024, Battelle Energy Alliance, LLC, All Rights Reserved
+
 from airflow import DAG
 from datetime import datetime
 from deeplynx_provider.operators.configuration_operator import DeepLynxConfigurationOperator

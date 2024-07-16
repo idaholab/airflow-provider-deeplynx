@@ -1,3 +1,5 @@
+# Copyright 2024, Battelle Energy Alliance, LLC, All Rights Reserved
+
 from airflow.hooks.base import BaseHook
 from deep_lynx.configuration import Configuration
 import deep_lynx

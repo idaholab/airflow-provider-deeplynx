@@ -1,3 +1,5 @@
+# Copyright 2024, Battelle Energy Alliance, LLC, All Rights Reserved
+
 from airflow.utils.decorators import apply_defaults
 from deeplynx_provider.operators.deeplynx_base_operator import DeepLynxBaseOperator
 from deeplynx_provider.operators.query_helpers import (
