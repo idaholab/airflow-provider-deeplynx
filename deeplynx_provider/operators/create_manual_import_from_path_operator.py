@@ -6,12 +6,12 @@ from pprint import pprint
 
 class CreateManualImportFromPathOperator(DeepLynxBaseOperator):
     """
-    Operator to create a manual import in DeepLynx.
+    Operator to create a manual import in DeepLynx; file import using file path.
 
     Attributes:
         container_id (str): ID of the container in DeepLynx.
         data_source_id (str): ID of the data source in DeepLynx.
-        file_path (str): Dictionary body for the manual import.
+        file_path (str): Local file path string.
         conn_id (str, optional): Connection ID for DeepLynx. Defaults to None.
         host (str, optional): Host for DeepLynx. Defaults to None.
         deeplynx_config (dict, optional): Configuration dictionary for DeepLynx. Defaults to None.

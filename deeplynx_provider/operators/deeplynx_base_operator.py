@@ -12,8 +12,8 @@ import os
 
 class DeepLynxBaseOperator(BaseOperator):
     """
-    DeepLynxBaseOperator is an Airflow base operator to perform common setup
-    and configuration for interacting with the DeepLynx API. Subclasses must
+    DeepLynxBaseOperator is the base for the majority of the operators in deeplynx_provider.
+    Used to perform common setup and configuration for interacting with the DeepLynx API. Subclasses must
     implement the `do_custom_logic` method to define the specific logic for the operator.
 
     Attributes:

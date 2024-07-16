@@ -8,8 +8,7 @@ from enum import Enum
 
 class DataQueryOperator(DeepLynxBaseOperator):
     """
-    DataQueryOperator is an Airflow operator to perform data queries
-    using a predefined query body. This operator supports queries
+    Perform data queries using a predefined query body. This operator supports queries
     for graphs, metatypes, and relationships.
 
     Attributes:

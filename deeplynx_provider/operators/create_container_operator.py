@@ -6,8 +6,7 @@ from deep_lynx.configuration import Configuration
 
 class CreateContainerOperator(DeepLynxBaseOperator):
     """
-    CreateContainerOperator is an Airflow operator to check if a container
-    with the given name exists. If it exists, the operator retrieves the container ID.
+    Check if a container with the given name exists. If it exists, the operator retrieves the container ID.
     Otherwise, it creates a new container and returns the new container ID.
 
     This operator requires a connection ID and the name of the container to check or create.

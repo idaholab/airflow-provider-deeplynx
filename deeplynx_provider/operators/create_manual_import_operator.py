@@ -6,12 +6,13 @@ from pprint import pprint
 
 class CreateManualImportOperator(DeepLynxBaseOperator):
     """
-    Operator to create a manual import in DeepLynx.
+    Operator to create a manual import in DeepLynx; .
 
     Attributes:
         container_id (str): ID of the container in DeepLynx.
         data_source_id (str): ID of the data source in DeepLynx.
-        import_body (dict): Dictionary body for the manual import.
+        import_body (dict): Dictionary body for the manual import, which can be a JSON object
+                            or an array of JSON objects.
         conn_id (str, optional): Connection ID for DeepLynx. Defaults to None.
         host (str, optional): Host for DeepLynx. Defaults to None.
         deeplynx_config (dict, optional): Configuration dictionary for DeepLynx. Defaults to None.

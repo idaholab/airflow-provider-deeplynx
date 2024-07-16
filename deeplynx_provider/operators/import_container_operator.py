@@ -6,12 +6,12 @@ from deep_lynx.configuration import Configuration
 
 class ImportContainerOperator(DeepLynxBaseOperator):
     """
-    ImportContainerOperator is an Airflow operator to import another container's exported ontology, data sources, and type mappings.
+    Import another container's exported ontology, data sources, and type mappings.
 
-    This operator requires a connection ID and the name of the container to check or create.
+    This operator requires a connection ID and the container_id to import container settings into.
 
     Attributes:
-        container_id (str): The name of the container to check or create.
+        container_id (str): The container_id to import into.
         file_path (str): The local path to the exported container that you want to import.
         conn_id (str, optional): The connection ID to use for the operation.
         host (str, optional): The host for the DeepLynx API.
@@ -28,7 +28,7 @@ class ImportContainerOperator(DeepLynxBaseOperator):
         Initialize ImportContainerOperator with the given parameters.
 
         Args:
-            container_id (str): The name of the container to check or create.
+            container_id (str): The container_id to import into.
             file_path (str): The local path to the exported container that you want to import.
             dryrun (bool, optional): Whether to perform a dry run of the import.
             import_ontology (bool, optional): Whether to import the ontology.

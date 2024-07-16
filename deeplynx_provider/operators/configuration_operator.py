@@ -10,8 +10,7 @@ import os
 
 class DeepLynxConfigurationOperator(BaseOperator):
     """
-    DeepLynxConfigurationOperator is an Airflow operator to create and configure
-    a DeepLynx configuration object.
+    Create and configure a DeepLynx configuration object.
 
     This operator requires either a connection ID or a host, and can be customized
     with various optional parameters for API key management, SSL verification,

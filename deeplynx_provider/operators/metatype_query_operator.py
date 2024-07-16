@@ -7,7 +7,7 @@ import json
 
 class MetatypeQueryOperator(DeepLynxBaseOperator):
     """
-    MetatypeQueryOperator is an Airflow operator to query metatype data from DeepLynx.
+    Query all container data for a given metatype.
 
     This operator performs a GraphQL introspection query to retrieve the fields for a specified
     metatype, constructs a query using those fields, and then queries the metatype data. The

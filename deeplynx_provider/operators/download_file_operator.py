@@ -4,8 +4,7 @@ from deep_lynx.configuration import Configuration
 
 class DownloadFileOperator(DeepLynxBaseOperator):
     """
-    DownloadFileOperator is an Airflow operator to download a file from a specified
-    container in DeepLynx.
+    Download a file from a specified container in DeepLynx.
 
     This operator requires the container ID and file ID, along with optional parameters
     for connection details and additional DeepLynx configuration.
@@ -55,7 +54,6 @@ class DownloadFileOperator(DeepLynxBaseOperator):
         Returns:
             None
         """
-        print(f'self.ssl_ca_cert: {self.ssl_ca_cert}')
 
         # Get API client
         data_sources_api = deeplynx_hook.get_data_sources_api()

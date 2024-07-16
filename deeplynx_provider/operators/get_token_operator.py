@@ -8,10 +8,10 @@ import deep_lynx
 
 class GetOauthTokenOperator(BaseOperator):
     """
-    GetOauthTokenOperator is an Airflow operator to retrieve an OAuth token from DeepLynx.
+    Retrieve an OAuth token from DeepLynx.
 
-    This operator requires either a connection ID or a host, along with API key and secret
-    for authentication. The token and host are pushed to XCom upon successful execution.
+    This operator requires either a DeepLynx connection ID, or a host, API key, and secret.
+    The token and host are pushed to XCom upon successful execution.
 
     Attributes:
         conn_id (str, optional): The connection ID to use for the operation.

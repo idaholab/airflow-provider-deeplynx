@@ -13,8 +13,7 @@ import json
 
 class DataQueryWithParamsOperator(DeepLynxBaseOperator):
     """
-    DataQueryWithParamsOperator is an Airflow operator to perform data queries
-    using parameters for building the query body. This operator supports queries
+    Perform data queries using parameters for building the query body. This operator supports queries
     for graphs, metatypes, and relationships.
 
     Attributes:
