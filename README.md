@@ -22,6 +22,7 @@ This package uses some environment variables for configuration. The environment 
 ## Usage
 Typical communication with DeepLynx requires a bearer token, so the first task of a DeepLynx DAG is usually to generate a token, which can be done with `GetOauthTokenOperator`. Once a token is generated using this operator, it can be passed to downstream tasks using [XComs](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/xcoms.html#xcoms), the token generation `task_id`, and the key `token`. `GetOauthTokenOperator` requires either a `conn_id` of an Airflow [Connection](https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/connections.html#connections-hooks) of type DeepLynx, or the parameters `host`, `api_key`, and `api_secret`. It is recommended to create a new Airflow connection of type DeepLynx through the [Airflow UI](https://airflow.apache.org/docs/apache-airflow/stable/howto/connection.html#creating-a-connection-with-the-ui), and input values for `DeepLynx URL`, `API Key`, and `API Secret`. You can then use this DeepLynx connection's id to set the
 `conn_id` for any airflow operators in this package (alternatively, you can supply the `host` parameter).
+
 Navigate to the Connections page with Admin -> Connections.
 ![image](create_deeplynx_conn_with_airflow_ui.png)
 
@@ -51,12 +52,12 @@ This DAG shows all the package supported ways that you can query for metatypes, 
 This DAG shows how you can get a DeepLynx token using `GetOauthTokenOperator` by directly specifying `host`, `api_key`, and `api_secret` (instead of using `conn_id`)
 
 ### Class Documentation
-Class documentation is available [here](deeplynx_provider/docs). It was generated using [pdoc](https://github.com/pdoc3/pdoc) and the command `pdoc --output-dir=docs deeplynx_provider` ran from the root of this project.
+Class documentation is available [here](docs/deeplynx_provider). It was generated using [pdoc](https://github.com/pdoc3/pdoc) and the command `pdoc --output-dir=docs deeplynx_provider` ran from the root of this project.
 
 ### DeepLynx Config
 Communication with DeepLynx using this package can be configured with various options like SSL certificate and local file writing locations. Most of the time, the default DeepLynx config will work just fine, but to learn more continue reading.
 
-The operators in this provider package use the [Deep Lynx Python SDK](https://github.com/idaholab/Deep-Lynx-Python-Package) to communicate with DeepLynx. The [DeepLynxConfigurationOperator](deeplynx_provider/operators/configuration_operator.py) can be used to set your (Configuration)[https://github.com/idaholab/Deep-Lynx-Python-Package/blob/main/deep_lynx/configuration.py] exactly how you want it, and this configuration is then passed to a task instance (XCom)[https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/xcoms.html] so that downstream tasks derived from [DeepLynxBaseOperator](deeplynx_provider/operators/deeplynx_base_operator.py) can use this configuration.
+The operators in this provider package use the [Deep Lynx Python SDK](https://github.com/idaholab/Deep-Lynx-Python-Package) to communicate with DeepLynx. The [DeepLynxConfigurationOperator](deeplynx_provider/operators/configuration_operator.py) can be used to set your [Configuration](https://github.com/idaholab/Deep-Lynx-Python-Package/blob/main/deep_lynx/configuration.py) exactly how you want it, and this configuration is then passed to a task instance [XCom](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/xcoms.html) so that downstream tasks derived from [DeepLynxBaseOperator](deeplynx_provider/operators/deeplynx_base_operator.py) can use this configuration.
 
 #### DeepLynx Authentication
 This package is setup to use [token](https://github.com/idaholab/Deep-Lynx/wiki/Authentication-Methods#token-token) authentication with DeepLynx, but other authentication methods are supported by setting the [DeepLynx Config](#deepLynx-config).
