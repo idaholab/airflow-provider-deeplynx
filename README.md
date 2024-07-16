@@ -1,5 +1,6 @@
 # DeepLynx-Airflow-Provider
-TODO: intro
+This custom [Airflow provider package](https://airflow.apache.org/docs/apache-airflow-providers/) allows you to create Airflow tasks that interact with the [DeepLynx](https://github.com/idaholab/Deep-Lynx) data warehouse. Utilizing operators specifically designed for DeepLynx, this package enables seamless integration and communication between Airflow and DeepLynx, facilitating data management and processing workflows.
+
 ## Installation
 ### Install from PyPI
 (coming soon) To install the provider package from PyPI, simply run:
@@ -22,7 +23,7 @@ This package uses some environment variables for configuration. The environment 
 Typical communication with DeepLynx requires a bearer token, so the first task of a DeepLynx DAG is usually to generate a token, which can be done with `GetOauthTokenOperator`. Once a token is generated using this operator, it can be passed to downstream tasks using [XComs](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/xcoms.html#xcoms), the token generation `task_id`, and the key `token`. `GetOauthTokenOperator` requires either a `conn_id` of an Airflow [Connection](https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/connections.html#connections-hooks) of type DeepLynx, or the parameters `host`, `api_key`, and `api_secret`. It is recommended to create a new Airflow connection of type DeepLynx through the [Airflow UI](https://airflow.apache.org/docs/apache-airflow/stable/howto/connection.html#creating-a-connection-with-the-ui), and input values for `DeepLynx URL`, `API Key`, and `API Secret`. You can then use this DeepLynx connection's id to set the
 `conn_id` for any airflow operators in this package (alternatively, you can supply the `host` parameter).
 Navigate to the Connections page with Admin -> Connections.
-![image](https://media.github.inl.gov/user/13/files/bc751733-676c-48ac-9573-b06b7d1b7750)
+![image](create_deeplynx_conn_with_airflow_ui.png)
 
 Most functionality can be understood by looking at the provided [Example Dags](deeplynx_provider/example_dags). Class level documentation is also provided.
 
@@ -65,7 +66,6 @@ This package is setup to use [token](https://github.com/idaholab/Deep-Lynx/wiki/
 - If using this Airflow package in a Docker environment to talk to a Dockerized DeepLynx, you should likely set your Deeplynx host/url to `http://host.docker.internal:8090`.
 
 ### Other Documentation
-- Dockerized Airflow Development setup [here](https://github.inl.gov/Digital-Engineering/airflow-dev)
 - Airflow documentation on creating a custom provider [here](https://airflow.apache.org/docs/apache-airflow-providers/howto/create-custom-providers.html)
 - airflow-provider-sample project [here](https://github.com/astronomer/airflow-provider-sample)
 
