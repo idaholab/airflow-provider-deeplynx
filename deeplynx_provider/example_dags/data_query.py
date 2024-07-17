@@ -26,7 +26,7 @@ dag_params = {
 dag = DAG(
     'data_query',
     default_args=default_args,
-    description='Demonstrates various ways to query metatypes, relationships, and perform a graph query using the package. Requires users to create a graph in DeepLynx and edit the DAG file to match the query bodies, parameters, and properties with their graph data.'
+    description='Demonstrates various ways to query metatypes, relationships, and perform a graph query using the package. Requires users to create a graph in DeepLynx and edit the DAG file to match the query bodies, parameters, and properties with their graph data.',
     schedule=None,
     catchup=False,
     params=dag_params,

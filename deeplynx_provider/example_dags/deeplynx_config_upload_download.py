@@ -33,7 +33,7 @@ dag_params = {
 dag = DAG(
     'deeplynx_config_upload_download',
     default_args=default_args,
-    description='Demonstrates using `DeepLynxConfigurationOperator` to create a custom configuration for DeepLynx communication. Requires an existing DeepLynx container and data source, along with `connection_id`, `container_id`, and `data_source_id`.'
+    description='Demonstrates using `DeepLynxConfigurationOperator` to create a custom configuration for DeepLynx communication. Requires an existing DeepLynx container and data source, along with `connection_id`, `container_id`, and `data_source_id`.',
     schedule=None,
     catchup=False,
     params=dag_params,
