@@ -3,7 +3,7 @@ This custom [Airflow provider package](https://airflow.apache.org/docs/apache-ai
 
 ## Installation
 ### Install from PyPI
-(coming soon) To install the provider package from PyPI, simply run:
+To install the provider package from PyPI, simply run:
 
 ```sh
 pip install airflow-provider-deeplynx
