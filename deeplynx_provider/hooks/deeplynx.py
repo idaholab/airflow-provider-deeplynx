@@ -106,6 +106,16 @@ class DeepLynxHook(BaseHook):
         """
         deep_lynx_client = self.get_deep_lynx_client()
         return deep_lynx.ContainersApi(deep_lynx_client)
+    
+    def get_graph_api(self):
+        """
+        Get the Graph API client.
+
+        Returns:
+            deep_lynx.GraphApi: The Graph API client.
+        """
+        deep_lynx_client = self.get_deep_lynx_client()
+        return deep_lynx.GraphApi(deep_lynx_client)
 
     ###########################################
     ##### DeepLynx Connection Field
