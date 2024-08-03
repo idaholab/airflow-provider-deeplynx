@@ -93,8 +93,20 @@ Classes
         Returns:
             deep_lynx.ApiClient: The initialized DeepLynx API client.
 
+    `get_graph_api(self)`
+    :   Get the Graph API client.
+        
+        Returns:
+            deep_lynx.GraphApi: The Graph API client.
+
     `get_time_series_api(self)`
     :   Get the TimeSeries API client.
         
         Returns:
-            deep_lynx.TimeSeriesApi: The TimeSeries API client.
+            deep_lynx.TimeSeriesApi: The TimeSeries API client.
+
+    `get_type_mapping_api(self)`
+    :   Get the DataTypeMappings API client.
+        
+        Returns:
+            deep_lynx.DataTypeMappingsApi: The DataTypeMappings API client.
