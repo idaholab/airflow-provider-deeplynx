@@ -41,6 +41,7 @@ Classes
 
     ### Descendants
 
+    * deeplynx_provider.operators.attach_node_file_operator.AttachFileOperator
     * deeplynx_provider.operators.create_container_operator.CreateContainerOperator
     * deeplynx_provider.operators.create_manual_import_from_path_operator.CreateManualImportFromPathOperator
     * deeplynx_provider.operators.create_manual_import_operator.CreateManualImportOperator
@@ -50,6 +51,7 @@ Classes
     * deeplynx_provider.operators.import_container_operator.ImportContainerOperator
     * deeplynx_provider.operators.metatype_query_operator.MetatypeQueryOperator
     * deeplynx_provider.operators.set_data_source_active_operator.SetDataSourceActiveOperator
+    * deeplynx_provider.operators.set_type_mapping_active_operator.SetTypeMappingActiveOperator
     * deeplynx_provider.operators.timeseries_query_all_operator.TimeSeriesQueryAllOperator
     * deeplynx_provider.operators.timeseries_query_operator.TimeSeriesQueryOperator
     * deeplynx_provider.operators.upload_file_operator.UploadFileOperator

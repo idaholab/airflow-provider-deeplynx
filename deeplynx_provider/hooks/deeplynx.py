@@ -117,6 +117,16 @@ class DeepLynxHook(BaseHook):
         deep_lynx_client = self.get_deep_lynx_client()
         return deep_lynx.GraphApi(deep_lynx_client)
 
+    def get_type_mapping_api(self):
+        """
+        Get the DataTypeMappings API client.
+
+        Returns:
+            deep_lynx.DataTypeMappingsApi: The DataTypeMappings API client.
+        """
+        deep_lynx_client = self.get_deep_lynx_client()
+        return deep_lynx.DataTypeMappingsApi(deep_lynx_client)
+
     ###########################################
     ##### DeepLynx Connection Field
     @staticmethod

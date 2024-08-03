@@ -44,13 +44,14 @@ class CreateManualImportOperator(DeepLynxBaseOperator):
         try:
             # Get API client
             data_sources_api = deeplynx_hook.get_data_sources_api()
-
             # Create manual import
             response = data_sources_api.create_manual_import(self.container_id, self.data_source_id, body=self.import_body)
-
-            # Check if the response indicates success
-            if response.get('isError') != False:
-                raise AirflowException(f"Failed to create manual import: {response}")
+            if response.get("isError") == False:
+                # Push matched_mapping.id to XCom
+                task_instance = context['task_instance']
+                task_instance.xcom_push(key='import_id', value=response["value"]["id"])
+            else:
+                raise AirflowException(f"An error occurred in create_manual_import_from_path: {response}")
 
         except Exception as e:
             # Raise an AirflowException with the error message
