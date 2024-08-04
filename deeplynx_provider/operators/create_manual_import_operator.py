@@ -47,12 +47,18 @@ class CreateManualImportOperator(DeepLynxBaseOperator):
             # Create manual import
             response = data_sources_api.create_manual_import(self.container_id, self.data_source_id, body=self.import_body)
             if response.get("isError") == False:
-                # Push matched_mapping.id to XCom
-                task_instance = context['task_instance']
-                task_instance.xcom_push(key='import_id', value=response["value"]["id"])
+                # manual import to normal data source produces an import id which we need; import to timeseries does not
+                value = response.get("value")
+                if isinstance(value, dict):
+                    import_id = value.get("id")
+                    if import_id is not None:
+                        task_instance = context['task_instance']
+                        task_instance.xcom_push(key='import_id', value=import_id)
+                    else:
+                        raise AirflowException(f"import_id not found in response: {response}")
             else:
-                raise AirflowException(f"An error occurred in create_manual_import_from_path: {response}")
+                raise AirflowException(f"An error occurred in create_manual_import: {response}")
 
         except Exception as e:
             # Raise an AirflowException with the error message
-            raise AirflowException(f"An error occurred while creating the manual import: {str(e)}")
+            raise AirflowException(f"An error occurred while creating the manual import: {e}")
