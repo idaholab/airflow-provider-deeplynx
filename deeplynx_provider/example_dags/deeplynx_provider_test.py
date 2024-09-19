@@ -15,7 +15,7 @@ import os
 # get local data paths
 dag_directory = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(dag_directory, 'data')
-container_export_name = "Container_export.json"
+container_export_name = "Container_Export.json"
 container_export_path = os.path.join(data_dir, container_export_name)
 timeseries_data_name = "tc_201.csv"
 import_data_path = os.path.join(data_dir, timeseries_data_name)

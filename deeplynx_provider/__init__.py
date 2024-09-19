@@ -1,6 +1,6 @@
 # Copyright 2024, Battelle Energy Alliance, LLC, All Rights Reserved
 
-__version__ = "0.4.3"
+__version__ = "0.4.4"
 
 ## This is needed to allow Airflow to pick up specific metadata fields it needs for certain features.
 def get_provider_info():
