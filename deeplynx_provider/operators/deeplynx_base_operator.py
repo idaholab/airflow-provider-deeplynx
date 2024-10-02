@@ -156,7 +156,7 @@ class DeepLynxBaseOperator(BaseOperator):
             None
         """
         task_instance = context['task_instance']
-        if self.write_to_file is not None:
+        if self.write_to_file is not None and self.write_to_file is True:
             file_path = self.save_data(data, file_name)
             task_instance.xcom_push(key='file_path', value=file_path)
         else:
