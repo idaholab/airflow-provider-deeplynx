@@ -16,8 +16,10 @@ default_args = {
 }
 
 dag_params = {
-    "connection_id": "deeplynx.dev",
-    "container_id": "318",
+    "connection_id": "",
+    "container_id": "",
+    "root_node_id": "",
+    "depth": "8",
 }
 
 @dag(
@@ -33,32 +35,30 @@ def data_query_then_parse():
     # Task to get OAuth token
     get_token = GetOauthTokenOperator(
         task_id='get_token',
-        conn_id='{{ params.connection_id }}',  # Using params instead of dag_run.conf to avoid runtime templating issues
+        conn_id='{{ dag_run.conf["connection_id"] }}',
     )
 
     # Task to query the graph
     query_graph = DataQueryWithParamsOperator(
         task_id='query_graph_with_params',
-        conn_id='{{ params.connection_id }}',
+        conn_id='{{ dag_run.conf["connection_id"] }}',
         token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
         query_type=QueryType.GRAPH,
-        properties={'root_node': '5128649', 'depth': '8'},
-        container_id='{{ params.container_id }}',
+        properties={'root_node': '{{ dag_run.conf["root_node_id"] }}', 'depth': '{{ dag_run.conf["root_node_id"] }}'},
+        container_id='{{ dag_run.conf["container_id"] }}',
         write_to_file=False,
     )
 
-    # Python task to parse the query data
     @task
     def parse_query(data):
         import json
 
         json_data = json.loads(data)
-        print(type(json_data))
         parsed_data = []
 
         if json_data:
             for object in json_data:
-                print(object)
+                # print(object)
                 # Extract some infos
                 origin_id = object["origin_id"]
                 if origin_id:
@@ -66,12 +66,12 @@ def data_query_then_parse():
 
         return parsed_data
 
-    # Python task to print the parsed data (or you can use it for further processing)
     @task
     def process_parsed_data(parsed_data):
         if parsed_data:
             for id in parsed_data:
                 print(f"Origin Id: {id}")
+
 
     # Set dependencies using returned values
     get_token >> query_graph
