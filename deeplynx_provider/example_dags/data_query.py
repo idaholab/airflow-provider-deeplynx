@@ -7,7 +7,6 @@ from deeplynx_provider.operators.data_query_operator import DataQueryOperator, Q
 from deeplynx_provider.operators.data_query_with_params_operator import DataQueryWithParamsOperator, QueryType
 from deeplynx_provider.operators.metatype_query_operator import MetatypeQueryOperator
 
-
 #####################################
 
 default_args = {
@@ -19,8 +18,8 @@ default_args = {
 }
 
 dag_params = {
-  "connection_id": "",
-  "container_id": "",
+    "connection_id": "",
+    "container_id": "",
 }
 
 dag = DAG(
@@ -35,7 +34,7 @@ dag = DAG(
 
 get_token = GetOauthTokenOperator(
     task_id='get_token',
-    conn_id='{{ params.connection_id }}',
+    conn_id='{{ dag_run.conf["connection_id"] }}',
     dag=dag
 )
 
@@ -52,11 +51,11 @@ metatype_query_body = """
 
 query_metatype = DataQueryOperator(
     task_id='query_metatype',
-    conn_id='{{ params.connection_id }}',
+    conn_id='{{ dag_run.conf["connection_id"] }}',
     token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
     query_type=QueryType.METATYPE,
     query_body=metatype_query_body,
-    container_id='{{ params.container_id }}',
+    container_id='{{ dag_run.conf["container_id"] }}',
     write_to_file=True,
     dag=dag
 )
@@ -78,11 +77,11 @@ relationship_query_body = """
 
 query_relationship = DataQueryOperator(
     task_id='query_relationship',
-    conn_id='{{ params.connection_id }}',
+    conn_id='{{ dag_run.conf["connection_id"] }}',
     token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
     query_type=QueryType.RELATIONSHIP,
     query_body=relationship_query_body,
-    container_id='{{ params.container_id }}',
+    container_id='{{ dag_run.conf["container_id"] }}',
     dag=dag
 )
 
@@ -106,11 +105,11 @@ graph_query_body = """
 
 query_graph = DataQueryOperator(
     task_id='query_graph',
-    conn_id='{{ params.connection_id }}',
+    conn_id='{{ dag_run.conf["connection_id"] }}',
     token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
     query_type=QueryType.GRAPH,
     query_body=graph_query_body,
-    container_id='{{ params.container_id }}',
+    container_id='{{ dag_run.conf["container_id"] }}',
     write_to_file=False,
     dag=dag
 )
@@ -119,42 +118,42 @@ query_graph = DataQueryOperator(
 
 query_metatype_with_params = DataQueryWithParamsOperator(
     task_id='query_metatype_with_params',
-    conn_id='{{ params.connection_id }}',
+    conn_id='{{ dag_run.conf["connection_id"] }}',
     token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
     query_type=QueryType.METATYPE,
     properties={'metatype_name': 'Occurrence', 'fields_list': ['name', 'NodeId']},
-    container_id='{{ params.container_id }}',
+    container_id='{{ dag_run.conf["container_id"] }}',
     write_to_file=True,
     dag=dag
 )
 
 query_relationship_with_params = DataQueryWithParamsOperator(
     task_id='query_relationship_with_params',
-    conn_id='{{ params.connection_id }}',
+    conn_id='{{ dag_run.conf["connection_id"] }}',
     token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
     query_type=QueryType.RELATIONSHIP,
     properties={'relationship_name': 'decomposedBy'},
-    container_id='{{ params.container_id }}',
+    container_id='{{ dag_run.conf["container_id"] }}',
     dag=dag
 )
 
 query_graph_with_params = DataQueryWithParamsOperator(
     task_id='query_graph_with_params',
-    conn_id='{{ params.connection_id }}',
+    conn_id='{{ dag_run.conf["connection_id"] }}',
     token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
     query_type=QueryType.GRAPH,
     properties={'root_node': '4356266', 'depth': '8'},
-    container_id='{{ params.container_id }}',
+    container_id='{{ dag_run.conf["container_id"] }}',
     write_to_file=False,
     dag=dag
 )
 
 another_query_metatype = MetatypeQueryOperator(
     task_id='another_query_metatype',
-    conn_id='{{ params.connection_id }}',
+    conn_id='{{ dag_run.conf["connection_id"] }}',
     token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
     metatype_name='Occurrence',
-    container_id='{{ params.container_id }}',
+    container_id='{{ dag_run.conf["container_id"] }}',
     write_to_file=True,
     dag=dag
 )

@@ -14,7 +14,6 @@ data_dir = os.path.join(dag_directory, 'data')
 import_data_name = "lynx_blue.png"
 import_data_path = os.path.join(data_dir, import_data_name)
 
-
 default_args = {
     'owner': 'jack',
     'concurrency': 1,
@@ -24,10 +23,10 @@ default_args = {
 }
 
 dag_params = {
-  "connection_id": "",
-  "container_id": "",
-  "data_source_id": "",
-  "download_file_directory": "/usr/local/airflow/logs/custom_download_directory",
+    "connection_id": "",
+    "container_id": "",
+    "data_source_id": "",
+    "download_file_directory": "/usr/local/airflow/logs/custom_download_directory",
 }
 
 dag = DAG(
@@ -42,14 +41,14 @@ dag = DAG(
 
 create_config = DeepLynxConfigurationOperator(
     task_id='create_config',
-    conn_id='{{ params.connection_id }}',
-    temp_folder_path='{{ params.download_file_directory }}',
+    conn_id='{{ dag_run.conf["connection_id"] }}',
+    temp_folder_path=dag.params["download_file_directory"],
     dag=dag
 )
 
 get_token = GetOauthTokenOperator(
     task_id='get_token',
-    conn_id='{{ params.connection_id }}',
+    conn_id='{{ dag_run.conf["connection_id"] }}',
     dag=dag
 )
 
@@ -57,9 +56,9 @@ upload_file = UploadFileOperator(
     task_id='upload_file',
     deeplynx_config="{{ ti.xcom_pull(task_ids='create_config', key='deeplynx_config') }}",
     token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
-    container_id='{{ params.container_id }}',
-    data_source_id = '{{ params.data_source_id }}',
-    file_path = import_data_path,
+    container_id='{{ dag_run.conf["container_id"] }}',
+    data_source_id='{{ dag_run.conf["data_source_id"] }}',
+    file_path=import_data_path,
     dag=dag
 )
 
@@ -67,10 +66,9 @@ download_file = DownloadFileOperator(
     task_id='download_file',
     deeplynx_config="{{ ti.xcom_pull(task_ids='create_config', key='deeplynx_config') }}",
     token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
-    container_id='{{ params.container_id }}',
+    container_id='{{ dag_run.conf["container_id"] }}',
     file_id="{{ ti.xcom_pull(task_ids='upload_file', key='file_id') }}",
     dag=dag
 )
-
 
 create_config >> get_token >> upload_file >> download_file
