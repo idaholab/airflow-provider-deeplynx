@@ -44,7 +44,7 @@ def data_query_then_parse():
         conn_id='{{ dag_run.conf["connection_id"] }}',
         token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
         query_type=QueryType.GRAPH,
-        properties={'root_node': '{{ dag_run.conf["root_node_id"] }}', 'depth': '{{ dag_run.conf["root_node_id"] }}'},
+        properties={'root_node': '{{ dag_run.conf["root_node_id"] }}', 'depth': '{{ dag_run.conf["depth"] }}'},
         container_id='{{ dag_run.conf["container_id"] }}',
         write_to_file=False,
     )

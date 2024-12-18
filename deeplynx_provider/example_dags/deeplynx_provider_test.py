@@ -6,19 +6,17 @@ from deeplynx_provider.operators.get_token_operator import GetOauthTokenOperator
 from deeplynx_provider.operators.create_container_operator import CreateContainerOperator
 from deeplynx_provider.operators.import_container_operator import ImportContainerOperator
 from deeplynx_provider.operators.set_data_source_active_operator import SetDataSourceActiveOperator
+from deeplynx_provider.operators.set_type_mapping_active_operator import SetTypeMappingActiveOperator
 from deeplynx_provider.operators.create_manual_import_from_path_operator import CreateManualImportFromPathOperator
-from deeplynx_provider.operators.timeseries_query_operator import TimeSeriesQueryOperator
-from deeplynx_provider.operators.timeseries_query_all_operator import TimeSeriesQueryAllOperator
-from deeplynx_provider.operators.upload_file_operator import UploadFileOperator
 import os
 
 # get local data paths
 dag_directory = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(dag_directory, 'data')
-container_export_name = "Container_Export.json"
+container_export_name = "MOOSE_Container_Export.json"
 container_export_path = os.path.join(data_dir, container_export_name)
-timeseries_data_name = "tc_201.csv"
-import_data_path = os.path.join(data_dir, timeseries_data_name)
+input_file_data_name = "moose_input_file_import.json"
+import_data_path = os.path.join(data_dir, input_file_data_name)
 
 default_args = {
     'owner': 'jack',
@@ -31,7 +29,7 @@ default_args = {
 dag_params = {
     "connection_id": "",
     "container_name": "My DeepLynx Airflow Provider Test",
-    "data_source_name": "TC-201",
+    "data_source_name": "MOOSE input file as graph",
 }
 
 dag = DAG(
@@ -39,9 +37,12 @@ dag = DAG(
     default_args=default_args,
     description=(
         'A functional test DAG for the `airflow-provider-deeplynx` package. '
-        'Users should create a DeepLynx connection in Airflow with `URL`, `API Key`, '
-        'and `API Secret`. To run the DAG, supply the DeepLynx `connection_id`, '
-        'optionally create a new `container_name`, and keep `data_source_name` as `TC-201`.'
+
+    ),
+    doc_md=('Users should create a DeepLynx connection in Airflow with `URL`, `API Key`, '
+    'and `API Secret`. To run the DAG, supply the DeepLynx `connection_id`, '
+    'optionally create a new `container_name`, and keep `data_source_name` as `MOOSE input file as graph`.'
+    'This dag will create a new DeepLynx container with an ontology, data source, and typemappings. It will them upload data, which will initiate DeepLynx data graph creation.'
     ),
     schedule=None,
     catchup=False,
@@ -72,7 +73,7 @@ import_container = ImportContainerOperator(
     file_path=container_export_path,
     import_ontology=True,
     import_data_sources=True,
-    # import_type_mappings = True,
+    import_type_mappings = True,
     dag=dag
 )
 
@@ -82,12 +83,62 @@ set_data_source_active = SetDataSourceActiveOperator(
     token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
     container_id="{{ ti.xcom_pull(task_ids='create_container', key='container_id') }}",
     data_source_name=dag.params["data_source_name"],
-    timeseries=True,
+    timeseries=False,
     dag=dag
 )
 
-import_timeseries_data = CreateManualImportFromPathOperator(
-    task_id='import_timeseries_data',
+set_MOOSEInputFile_active = SetTypeMappingActiveOperator(
+    task_id='set_MOOSEInputFile_active',
+    conn_id='{{ dag_run.conf["connection_id"] }}',
+    token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
+    container_id="{{ ti.xcom_pull(task_ids='create_container', key='container_id') }}",
+    data_source_id="{{ ti.xcom_pull(task_ids='set_data_source_active', key='data_id') }}",
+    match_keys=['id', 'name', 'description', 'MOOSEInputFile'],
+    dag=dag
+)
+
+set_NamedValue_active = SetTypeMappingActiveOperator(
+    task_id='set_NamedValue_active',
+    conn_id='{{ dag_run.conf["connection_id"] }}',
+    token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
+    container_id="{{ ti.xcom_pull(task_ids='create_container', key='container_id') }}",
+    data_source_id="{{ ti.xcom_pull(task_ids='set_data_source_active', key='data_id') }}",
+    match_keys=['id', 'name', 'value', 'NamedValue', 'parentId'],
+    dag=dag
+)
+
+set_Block_active = SetTypeMappingActiveOperator(
+    task_id='set_Block_active',
+    conn_id='{{ dag_run.conf["connection_id"] }}',
+    token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
+    container_id="{{ ti.xcom_pull(task_ids='create_container', key='container_id') }}",
+    data_source_id="{{ ti.xcom_pull(task_ids='set_data_source_active', key='data_id') }}",
+    match_keys=['id', 'name', 'type', 'Block', 'parentId'],
+    dag=dag
+)
+
+set_SubBlock_active = SetTypeMappingActiveOperator(
+    task_id='set_SubBlock_active',
+    conn_id='{{ dag_run.conf["connection_id"] }}',
+    token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
+    container_id="{{ ti.xcom_pull(task_ids='create_container', key='container_id') }}",
+    data_source_id="{{ ti.xcom_pull(task_ids='set_data_source_active', key='data_id') }}",
+    match_keys=['id', 'name', 'type', 'SubBlock', 'parentId'],
+    dag=dag
+)
+
+set_Parameter_active = SetTypeMappingActiveOperator(
+    task_id='set_Parameter_active',
+    conn_id='{{ dag_run.conf["connection_id"] }}',
+    token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
+    container_id="{{ ti.xcom_pull(task_ids='create_container', key='container_id') }}",
+    data_source_id="{{ ti.xcom_pull(task_ids='set_data_source_active', key='data_id') }}",
+    match_keys=['id', 'name', 'value', 'Parameter', 'parentId'],
+    dag=dag
+)
+
+import_data = CreateManualImportFromPathOperator(
+    task_id='import_data',
     conn_id='{{ dag_run.conf["connection_id"] }}',
     token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
     container_id="{{ ti.xcom_pull(task_ids='create_container', key='container_id') }}",
@@ -96,39 +147,4 @@ import_timeseries_data = CreateManualImportFromPathOperator(
     dag=dag
 )
 
-query_timeseries = TimeSeriesQueryOperator(
-    task_id='query_timeseries',
-    conn_id='{{ dag_run.conf["connection_id"] }}',
-    token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
-    properties=[
-        "timestamp",
-        "seconds",
-        "tc_201"
-    ],
-    query_params={'limit': 1000, 'sort_by': 'timestamp', 'sort_desc': True},
-    container_id="{{ ti.xcom_pull(task_ids='create_container', key='container_id') }}",
-    data_source_id="{{ ti.xcom_pull(task_ids='set_data_source_active', key='data_id') }}",
-    write_to_file=True,
-    dag=dag
-)
-
-query_timeseries_all = TimeSeriesQueryAllOperator(
-    task_id='timeseries_query_all',
-    conn_id='{{ dag_run.conf["connection_id"] }}',
-    token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
-    container_id="{{ ti.xcom_pull(task_ids='create_container', key='container_id') }}",
-    data_source_id="{{ ti.xcom_pull(task_ids='set_data_source_active', key='data_id') }}",
-    dag=dag
-)
-
-upload_result = UploadFileOperator(
-    task_id='upload_result',
-    conn_id='{{ dag_run.conf["connection_id"] }}',
-    token="{{ ti.xcom_pull(task_ids='get_token', key='token') }}",
-    container_id="{{ ti.xcom_pull(task_ids='create_container', key='container_id') }}",
-    data_source_id="{{ ti.xcom_pull(task_ids='set_data_source_active', key='data_id') }}",
-    file_path="{{ ti.xcom_pull(task_ids='query_timeseries', key='file_path') }}",
-    dag=dag
-)
-
-get_token >> create_container >> import_container >> set_data_source_active >> import_timeseries_data >> [query_timeseries, query_timeseries_all] >> upload_result
+get_token >> create_container >> import_container >> set_data_source_active >> [set_MOOSEInputFile_active, set_NamedValue_active, set_Block_active, set_SubBlock_active, set_Parameter_active] >> import_data

@@ -1,0 +1,365 @@
+[
+   {
+      "MOOSEInputFile": true,
+      "id": "thisMOOSEInputFile",
+      "name": "thisMOOSEInputFile",
+      "description": "an example MOOSE input file"
+   },
+   {
+      "NamedValue": true,
+      "name": "xmax",
+      "id": "thisMOOSEInputFile/xmax",
+      "parentId": "thisMOOSEInputFile",
+      "value": "3"
+   },
+   {
+      "Block": true,
+      "name": "Mesh",
+      "id": "thisMOOSEInputFile/Mesh",
+      "parentId": "thisMOOSEInputFile",
+      "type": ""
+   },
+   {
+      "SubBlock": true,
+      "name": "gen",
+      "id": "thisMOOSEInputFile/Mesh/gen",
+      "parentId": "thisMOOSEInputFile/Mesh",
+      "type": "GeneratedMeshGenerator"
+   },
+   {
+      "Parameter": true,
+      "name": "dim",
+      "id": "thisMOOSEInputFile/Mesh/gen/dim",
+      "parentId": "thisMOOSEInputFile/Mesh/gen",
+      "value": "1"
+   },
+   {
+      "Parameter": true,
+      "name": "nx",
+      "id": "thisMOOSEInputFile/Mesh/gen/nx",
+      "parentId": "thisMOOSEInputFile/Mesh/gen",
+      "value": "100"
+   },
+   {
+      "Parameter": true,
+      "name": "xmax",
+      "id": "thisMOOSEInputFile/Mesh/gen/xmax",
+      "parentId": "thisMOOSEInputFile/Mesh/gen",
+      "value": "${xmax}"
+   },
+   {
+      "Block": true,
+      "name": "Variables",
+      "id": "thisMOOSEInputFile/Variables",
+      "parentId": "thisMOOSEInputFile",
+      "type": ""
+   },
+   {
+      "SubBlock": true,
+      "name": "u",
+      "id": "thisMOOSEInputFile/Variables/u",
+      "parentId": "thisMOOSEInputFile/Variables",
+      "type": ""
+   },
+   {
+      "Block": true,
+      "name": "Kernels",
+      "id": "thisMOOSEInputFile/Kernels",
+      "parentId": "thisMOOSEInputFile",
+      "type": ""
+   },
+   {
+      "SubBlock": true,
+      "parentId": "thisMOOSEInputFile/Kernels",
+      "name": "diff",
+      "id": "thisMOOSEInputFile/Kernels/diff",
+      "type": "ADMatDiffusion"
+   },
+   {
+      "Parameter": true,
+      "name": "variable",
+      "id": "thisMOOSEInputFile/Kernels/diff/variable",
+      "parentId": "thisMOOSEInputFile/Kernels/diff",
+      "value": "u"
+   },
+   {
+      "Block": true,
+      "name": "BCs",
+      "id": "thisMOOSEInputFile/BCs",
+      "parentId": "thisMOOSEInputFile",
+      "type": ""
+   },
+   {
+      "SubBlock": true,
+      "name": "left",
+      "id": "thisMOOSEInputFile/BCs/left",
+      "parentId": "thisMOOSEInputFile/BCs",
+      "type": "ADDirichletBC"
+   },
+   {
+      "Parameter": true,
+      "name": "variable",
+      "id": "thisMOOSEInputFile/BCs/left/variable",
+      "parentId": "thisMOOSEInputFile/BCs/left",
+      "value": "u"
+   },
+   {
+      "Parameter": true,
+      "name": "boundary",
+      "id": "thisMOOSEInputFile/BCs/left/boundary",
+      "parentId": "thisMOOSEInputFile/BCs/left",
+      "value": "left"
+   },
+   {
+      "Parameter": true,
+      "name": "value",
+      "id": "thisMOOSEInputFile/BCs/left/value",
+      "parentId": "thisMOOSEInputFile/BCs/left",
+      "value": "300"
+   },
+   {
+      "SubBlock": true,
+      "name": "right",
+      "id": "thisMOOSEInputFile/BCs/right",
+      "parentId": "thisMOOSEInputFile/BCs",
+      "type": "ADNeumannBC"
+   },
+   {
+      "Parameter": true,
+      "name": "variable",
+      "id": "thisMOOSEInputFile/BCs/right/variable",
+      "parentId": "thisMOOSEInputFile/BCs/right",
+      "value": "u"
+   },
+   {
+      "Parameter": true,
+      "name": "boundary",
+      "id": "thisMOOSEInputFile/BCs/right/boundary",
+      "parentId": "thisMOOSEInputFile/BCs/right",
+      "value": "right"
+   },
+   {
+      "Parameter": true,
+      "name": "value",
+      "id": "thisMOOSEInputFile/BCs/right/value",
+      "parentId": "thisMOOSEInputFile/BCs/right",
+      "value": "100"
+   },
+   {
+      "Block": true,
+      "name": "Materials",
+      "id": "thisMOOSEInputFile/Materials",
+      "parentId": "thisMOOSEInputFile",
+      "type": ""
+   },
+   {
+      "SubBlock": true,
+      "name": "mat",
+      "id": "thisMOOSEInputFile/Materials/mat",
+      "parentId": "thisMOOSEInputFile/Materials",
+      "type": "ADGenericFunctionMaterial"
+   },
+   {
+      "Parameter": true,
+      "name": "prop_names",
+      "id": "thisMOOSEInputFile/Materials/mat/prop_names",
+      "parentId": "thisMOOSEInputFile/Materials/mat",
+      "value": "'D'"
+   },
+   {
+      "Parameter": true,
+      "name": "prop_values",
+      "id": "thisMOOSEInputFile/Materials/mat/prop_values",
+      "parentId": "thisMOOSEInputFile/Materials/mat",
+      "value": "'x'"
+   },
+   {
+      "Block": true,
+      "name": "Executioner",
+      "id": "thisMOOSEInputFile/Executioner",
+      "parentId": "thisMOOSEInputFile",
+      "type": "Steady"
+   },
+   {
+      "Parameter": true,
+      "name": "type",
+      "id": "thisMOOSEInputFile/Executioner/type",
+      "parentId": "thisMOOSEInputFile/Executioner",
+      "value": "Steady"
+   },
+   {
+      "Parameter": true,
+      "name": "solve_type",
+      "id": "thisMOOSEInputFile/Executioner/solve_type",
+      "parentId": "thisMOOSEInputFile/Executioner",
+      "value": "'NEWTON'"
+   },
+   {
+      "Block": true,
+      "name": "VectorPostprocessors",
+      "id": "thisMOOSEInputFile/VectorPostprocessors",
+      "parentId": "thisMOOSEInputFile",
+      "type": ""
+   },
+   {
+      "SubBlock": true,
+      "name": "temp_line",
+      "id": "thisMOOSEInputFile/VectorPostprocessors/temp_line",
+      "parentId": "thisMOOSEInputFile/VectorPostprocessors",
+      "type": "LineValueSampler"
+   },
+   {
+      "Parameter": true,
+      "name": "variable",
+      "id": "thisMOOSEInputFile/VectorPostprocessors/temp_line/variable",
+      "parentId": "thisMOOSEInputFile/VectorPostprocessors/temp_line",
+      "value": "u"
+   },
+   {
+      "Parameter": true,
+      "name": "sort_by",
+      "id": "thisMOOSEInputFile/VectorPostprocessors/temp_line/sort_by",
+      "parentId": "thisMOOSEInputFile/VectorPostprocessors/temp_line",
+      "value": "x"
+   },
+   {
+      "Parameter": true,
+      "name": "start_point",
+      "id": "thisMOOSEInputFile/VectorPostprocessors/temp_line/start_point",
+      "parentId": "thisMOOSEInputFile/VectorPostprocessors/temp_line",
+      "value": "'0 0 0'"
+   },
+   {
+      "Parameter": true,
+      "name": "end_point",
+      "id": "thisMOOSEInputFile/VectorPostprocessors/temp_line/end_point",
+      "parentId": "thisMOOSEInputFile/VectorPostprocessors/temp_line",
+      "value": "'${xmax} 0 0'"
+   },
+   {
+      "Parameter": true,
+      "name": "num_points",
+      "id": "thisMOOSEInputFile/VectorPostprocessors/temp_line/num_points",
+      "parentId": "thisMOOSEInputFile/VectorPostprocessors/temp_line",
+      "value": "200"
+   },
+   {
+      "Block": true,
+      "name": "Postprocessors",
+      "id": "thisMOOSEInputFile/Postprocessors",
+      "parentId": "thisMOOSEInputFile",
+      "type": ""
+   },
+   {
+      "SubBlock": true,
+      "name": "temp_mid",
+      "id": "thisMOOSEInputFile/Postprocessors/temp_mid",
+      "parentId": "thisMOOSEInputFile/Postprocessors",
+      "type": "PointValue"
+   },
+   {
+      "Parameter": true,
+      "name": "variable",
+      "id": "thisMOOSEInputFile/Postprocessors/temp_mid/variable",
+      "parentId": "thisMOOSEInputFile/Postprocessors/temp_mid",
+      "value": "u"
+   },
+   {
+      "Parameter": true,
+      "name": "point",
+      "id": "thisMOOSEInputFile/Postprocessors/temp_mid/point",
+      "parentId": "thisMOOSEInputFile/Postprocessors/temp_mid",
+      "value": "'1.5 0 0'"
+   },
+   {
+      "SubBlock": true,
+      "name": "temp_max",
+      "id": "thisMOOSEInputFile/Postprocessors/temp_max",
+      "parentId": "thisMOOSEInputFile/Postprocessors",
+      "type": "NodalExtremeValue"
+   },
+   {
+      "Parameter": true,
+      "name": "variable",
+      "id": "thisMOOSEInputFile/Postprocessors/temp_max/variable",
+      "parentId": "thisMOOSEInputFile/Postprocessors/temp_max",
+      "value": "u"
+   },
+   {
+      "Parameter": true,
+      "name": "value_type",
+      "id": "thisMOOSEInputFile/Postprocessors/temp_max/value_type",
+      "parentId": "thisMOOSEInputFile/Postprocessors/temp_max",
+      "value": "max"
+   },
+   {
+      "SubBlock": true,
+      "name": "temp_min",
+      "id": "thisMOOSEInputFile/Postprocessors/temp_min",
+      "parentId": "thisMOOSEInputFile/Postprocessors",
+      "type": "NodalExtremeValue"
+   },
+   {
+      "Parameter": true,
+      "name": "variable",
+      "id": "thisMOOSEInputFile/Postprocessors/temp_min/variable",
+      "parentId": "thisMOOSEInputFile/Postprocessors/temp_min",
+      "value": "u"
+   },
+   {
+      "Parameter": true,
+      "name": "value_type",
+      "id": "thisMOOSEInputFile/Postprocessors/temp_min/value_type",
+      "parentId": "thisMOOSEInputFile/Postprocessors/temp_min",
+      "value": "min"
+   },
+   {
+      "SubBlock": true,
+      "name": "temp_avg",
+      "id": "thisMOOSEInputFile/Postprocessors/temp_avg",
+      "parentId": "thisMOOSEInputFile/Postprocessors",
+      "type": "AverageNodalVariableValue"
+   },
+   {
+      "Parameter": true,
+      "name": "variable",
+      "id": "thisMOOSEInputFile/Postprocessors/temp_avg/variable",
+      "parentId": "thisMOOSEInputFile/Postprocessors/temp_avg",
+      "value": "u"
+   },
+   {
+      "Block": true,
+      "name": "Outputs",
+      "id": "thisMOOSEInputFile/Outputs",
+      "parentId": "thisMOOSEInputFile",
+      "type": ""
+   },
+   {
+      "SubBlock": true,
+      "name": "out",
+      "id": "thisMOOSEInputFile/Outputs/out",
+      "parentId": "thisMOOSEInputFile/Outputs",
+      "type": "JSON"
+   },
+   {
+      "Parameter": true,
+      "name": "postprocessors_as_reporters",
+      "id": "thisMOOSEInputFile/Outputs/out/postprocessors_as_reporters",
+      "parentId": "thisMOOSEInputFile/Outputs/out",
+      "value": "true"
+   },
+   {
+      "Parameter": true,
+      "name": "vectorpostprocessors_as_reporters",
+      "id": "thisMOOSEInputFile/Outputs/out/vectorpostprocessors_as_reporters",
+      "parentId": "thisMOOSEInputFile/Outputs/out",
+      "value": "true"
+   },
+   {
+      "Parameter": true,
+      "name": "file_base",
+      "id": "thisMOOSEInputFile/Outputs/out/file_base",
+      "parentId": "thisMOOSEInputFile/Outputs/out",
+      "value": "output/sockeye_run_out"
+   }
+]
