@@ -28,28 +28,25 @@ class GraphQLIntrospectionQuery:
 }}
 """
 
+# returns list of class (aka metatype) properties available to query; returns an empty list if that class is not in the DeepLynx container's ontology
 def IntrospectionQueryResponseToFieldsList(introspection_response, type_name):
-    fields_list = []
+    import logging
+
     response_data = introspection_response.to_dict()
-    validate_introspection_response(response_data, type_name)
-    fields_array = response_data['data']['__type']['fields']
-    for fields_obj in fields_array:
-        kind = fields_obj['type']['kind']
-        # TODO:
-        if kind == 'SCALAR':
-            name = fields_obj['name']
-            fields_list.append(name)
+    # print(response_data)
+    fields_list = []
+    if response_data.get('data', {}).get('__type') is None:
+        logging.warning(f"The Type named {type_name} is not present in the given DeepLynx container")
+    else:
+        fields_array = response_data['data']['__type']['fields']
+        for fields_obj in fields_array:
+            kind = fields_obj['type']['kind']
+            # TODO:
+            if kind == 'SCALAR':
+                name = fields_obj['name']
+                fields_list.append(name)
 
     return fields_list
-
-def validate_introspection_response(response_data, type_name):
-    from airflow.exceptions import AirflowException
-
-    try:
-        if response_data.get('data', {}).get('__type') is None:
-            raise AirflowException(f"The Type named {type_name} is not present in the given DeepLynx container")
-    except (ValueError, TypeError) as e:
-        raise AirflowException(f"Invalid response data: {e}")
 
 class TimeSeriesQuery:
     def __init__(self, properties, limit=1000, sort_by="timestamp", sort_desc=False):
@@ -152,3 +149,34 @@ class GraphQuery:
         }}
         """
         return query_template
+
+
+def get_data_from_response(json_dict: dict, query_type: QueryType):
+    """
+    Extract data from the query response based on the query type.
+
+    Args:
+        json_dict (dict): The JSON response dictionary from the DeepLynx API.
+        query_type (QueryType): The DeepLynx QueryType.
+
+    Returns:
+        tuple: A tuple containing the data name and the extracted data.
+    """
+    # print(f"json_dict: {json_dict}")
+    if "data" not in json_dict or json_dict.get("data") is None:
+        return ("no_data", [])
+    elif query_type == QueryType.GRAPH:
+        graph = json_dict["data"]["graph"]
+        return ("graph", graph)
+    elif query_type == QueryType.METATYPE:
+        metatypes = json_dict["data"]["metatypes"]
+        metatype_name = next(iter(metatypes))
+        metatype_values = metatypes[metatype_name]
+        return (metatype_name, metatype_values)
+    elif query_type == QueryType.RELATIONSHIP:
+        relationships = json_dict["data"]["relationships"]
+        relationship_name = next(iter(relationships))
+        relationship_values = relationships[relationship_name]
+        return (relationship_name, relationship_values)
+    else:
+        raise ValueError("Invalid query type")

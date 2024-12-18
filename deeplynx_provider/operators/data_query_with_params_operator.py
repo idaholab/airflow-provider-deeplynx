@@ -7,7 +7,8 @@ from deeplynx_provider.operators.query_helpers import (
     TimeSeriesQuery,
     RelationshipQuery,
     GraphQuery,
-    QueryType
+    QueryType,
+    get_data_from_response
 )
 import deep_lynx
 from deep_lynx.api.data_query_api import DataQueryApi
@@ -61,32 +62,6 @@ class DataQueryWithParamsOperator(DeepLynxBaseOperator):
         self.container_id = container_id
         self.write_to_file = write_to_file
 
-    def get_data_from_response(self, json_dict):
-        """
-        Extract data from the query response based on the query type.
-
-        Args:
-            json_dict (dict): The JSON response dictionary from the DeepLynx API.
-
-        Returns:
-            tuple: A tuple containing the data name and the extracted data.
-        """
-        if self.query_type == QueryType.GRAPH:
-            graph = json_dict["data"]["graph"]
-            return ("graph", graph)
-        elif self.query_type == QueryType.METATYPE:
-            metatypes = json_dict["data"]["metatypes"]
-            metatype_name = next(iter(metatypes))
-            metatype_values = metatypes[metatype_name]
-            return (metatype_name, metatype_values)
-        elif self.query_type == QueryType.RELATIONSHIP:
-            relationships = json_dict["data"]["relationships"]
-            relationship_name = next(iter(relationships))
-            relationship_values = relationships[relationship_name]
-            return (relationship_name, relationship_values)
-        else:
-            raise ValueError("Invalid query type")
-
     def generate_query(self):
         """
         Generate the GraphQL query string based on the properties and query type.
@@ -127,7 +102,7 @@ class DataQueryWithParamsOperator(DeepLynxBaseOperator):
         body = {"query": query}
         response = data_query_api.data_query(body, self.container_id)
 
-        (data_name, response_data) = self.get_data_from_response(response.to_dict())
+        (data_name, response_data) = get_data_from_response(response.to_dict(), self.query_type)
         response_data_json = json.dumps(response_data, indent=4)
 
         # Get data filename

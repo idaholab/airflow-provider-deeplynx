@@ -2,7 +2,7 @@
 
 from airflow.utils.decorators import apply_defaults
 from deeplynx_provider.operators.deeplynx_base_operator import DeepLynxBaseOperator
-from deeplynx_provider.operators.query_helpers import GraphQLIntrospectionQuery, IntrospectionQueryResponseToFieldsList, validate_introspection_response, MetatypeQuery
+from deeplynx_provider.operators.query_helpers import GraphQLIntrospectionQuery, IntrospectionQueryResponseToFieldsList, MetatypeQuery
 import deep_lynx
 from deep_lynx.api.data_query_api import DataQueryApi
 import json
@@ -70,23 +70,25 @@ class MetatypeQueryOperator(DeepLynxBaseOperator):
         # Perform introspection query
         introspection_query = GraphQLIntrospectionQuery(self.metatype_name).generate_query()
         introspection_response = data_query_api.data_query({"query": introspection_query}, self.container_id)
+        # returns list of class (aka metatype) properties available to query; returns an empty list if that class is not in the DeepLynx container's ontology
         fields_list = IntrospectionQueryResponseToFieldsList(introspection_response, self.metatype_name)
 
-        # Construct and execute the metatype query using the fields from introspection
-        query_obj = MetatypeQuery(self.metatype_name, fields_list)
-        query = query_obj.generate_query()
-        body = {"query": query}
-        response = data_query_api.data_query(body, self.container_id)
-
-        # Accessing the metatype data
-        response_data = response.to_dict()
-        metatype_data = response_data['data']['metatypes'][self.metatype_name]
+        if fields_list:
+            # Construct and execute the metatype query using the fields from introspection
+            query_obj = MetatypeQuery(self.metatype_name, fields_list)
+            query = query_obj.generate_query()
+            body = {"query": query}
+            response = data_query_api.data_query(body, self.container_id)
+            # Accessing the metatype data
+            response_data = response.to_dict()
+            # safely access metatype_data if it exists, return [] if not
+            metatype_data = response_data.get('data', {}).get('metatypes', {}).get(self.metatype_name, [])
+        else:
+            metatype_data = []
 
         # Format data as a JSON string
         metatype_json_data = json.dumps(metatype_data, indent=4)
-
         # Get data filename
         data_filename = self.format_query_response_filename(context, self.metatype_name)
-
         # Write or push to XCom
         self.write_or_push_to_xcom(context, metatype_json_data, data_filename)

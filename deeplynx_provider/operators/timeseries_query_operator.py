@@ -78,7 +78,7 @@ class TimeSeriesQueryOperator(DeepLynxBaseOperator):
 
         # Accessing the Timeseries data
         response_data = response.to_dict()
-        timeseries_data = response_data['data']['Timeseries']
+        timeseries_data = response_data.get('data', {}).get('Timeseries', [])
 
         # Format data as JSON string
         json_data = json.dumps(timeseries_data, indent=4)
