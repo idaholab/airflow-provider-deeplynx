@@ -1,3 +1,10 @@
+> [!WARNING]
+> **This repository has been archived and is no longer maintained.**
+> The code is provided for historical reference and may contain unpatched
+> or unknown vulnerabilities. It should not be used in production systems.
+
+---
+
 # DeepLynx-Airflow-Provider
 This custom [Airflow provider package](https://airflow.apache.org/docs/apache-airflow-providers/) allows you to create Airflow tasks that interact with the [DeepLynx](https://github.com/idaholab/Deep-Lynx) data warehouse. Utilizing operators specifically designed for DeepLynx, this package enables seamless integration and communication between Airflow and DeepLynx, facilitating data management and processing workflows.
 
